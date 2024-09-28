@@ -13,31 +13,13 @@
     @ViewData["Title"]  
     <a class="btn btn-primary" asp-action="Order" asp-route-id="@Model.Id">Đặt món</a>
 
-    @* <a class="btn btn-danger float-end" asp-action="Cancel" asp-route-id="@Model.Id">Hủy bàn</a> *@
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-danger d-none d-md-inline-block float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop-@Model.Id">
-        Hủy bàn
-    </button>
+    
+    @if(Model.Status){
+        <button type="button" class="btn btn-danger d-none d-md-inline-block float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop-@Model.Id">
+            Hủy bàn
+        </button>
+    }
 </h2>
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop-@Model.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Xác nhận hủy bàn?</h1>
-            </div>
-            <div class="modal-body">
-                <p>Đảm bảo chưa có món ăn nào được đưa lên.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <form class="d-inline-block" asp-action="Cancel" asp-route-id="@Model.Id">
-                    <button class="btn btn-danger" type="submit">Xác nhận</button>
-                </form>
-            </div>
-            </div>
-        </div>
-    </div>
 <hr>
 
 @if(ViewBag.Pays.Count > 0){
@@ -101,10 +83,36 @@
 
             <div class="border border-top border-success"></div>
 
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center py-2">
                 <h3>Tạm tính: @sum.ToString("N2")</h3>
-                <a asp-action="ExportPdfBuild" asp-route-id="@Model.Id" class="btn btn-success float-end my-3">Xuất hóa đơn</a>
+                @if(sum > 0){
+                    <div>
+                        <a asp-action="ExportPdfBuild" title="Xuất hóa đơn" asp-route-id="@Model.Id" class="btn btn-primary me-2 my-3"><i class="fa-solid fa-file-export"></i></a>
+                        <a asp-action="PayConfirm" asp-route-id="@Model.Id" class="btn btn-success float-end my-3">Đã thanh toán</a>
+                    </div>
+                }
             </div>
         </div>
     </div>
 }
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop-@Model.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Xác nhận hủy bàn?</h1>
+        </div>
+        <div class="modal-body">
+            <p>Đảm bảo chưa có món ăn nào được đưa lên.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <form class="d-inline-block" asp-action="Cancel" asp-route-id="@Model.Id">
+                <button class="btn btn-danger" type="submit">Xác nhận</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>

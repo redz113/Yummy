@@ -15,7 +15,8 @@ namespace AppFoods.Models
         public DbSet<Table> Tables {get; set; }
         public DbSet<MenuOrder> MenuOrders {get; set;}
         public DbSet<ComboOrder> ComboOrders {get; set;}
-        // public DbSet<ChefInRestaurant> ChefInRestaurants {get; set;}
+        public DbSet<Summary> Summarys {get; set;}
+       
         
 
         public AppDbContext(DbContextOptions options) : base(options)

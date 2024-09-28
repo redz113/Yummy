@@ -15,7 +15,22 @@
 else
 {
     @if(ViewBag.Restaurants != null && ViewBag.Restaurants.Count > 1){
+        <div class="text-end">
+            @Html.Partial("_TimePartial")
+            
+            <div class="mb-3">
+                <strong class="h6 p-2 border border-success rounded rounded-2">
+                    <i class="fa-solid fa-circle fa-lg" style="color: #00ff00;"></i>
+                    ON : 
+
+                    @if( ViewBag.TotalOn != null){
+                        <strong class="h5">@ViewBag.TotalOn</strong>
+                    }
+                </strong>
+            </div>
+        </div>
         
+
         <div class="mb-2">
             @foreach(var item in ViewBag.Restaurants){
                 string btn = "";
@@ -29,7 +44,12 @@ else
         </div>
     }
 
-    <h2><span>@ViewData["Title"] - @Model.Name</span> <span class="d-none d-md-inline-block">(@Model.Address)</span></h2>
+    <div class="row pb-3">
+        <h2 class="col-md-9"><span>@ViewData["Title"] - @Model.Name</span></h2>
+        <div class="col-md-3 text-md-end">
+            
+        </div>
+    </div>
     <div>
         @if(ViewBag.Locations != null && Model.FloorNumber > 1){
             string btn = "";

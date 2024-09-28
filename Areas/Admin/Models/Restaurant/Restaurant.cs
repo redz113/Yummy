@@ -38,4 +38,19 @@ namespace AppFoods.Models
 
         // public ICollection<Table> ChildrenTables {get; set;}
     }
+
+    // Chứa các build đã thanh toán
+    public class Summary
+    {
+        [Key]
+        public int Id {get; set;}
+        public int RestaurantId {get; set;}
+        [ForeignKey("RestaurantId")]
+        public Restaurant? Restaurant {get; set;}
+
+        public string TableName {get; set;}
+        public DateTime Time {get; set;} = DateTime.Now;
+        [DataType(DataType.Currency)]
+        public int TotalPrice {get; set;}
+    }
 }

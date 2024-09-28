@@ -54,7 +54,14 @@
                         <th>@c.Combo.Name</th>
                         <th class="text-center">@c.Quantity</th>
                         <th>
-                            <a href="" class="btn btn-success" title="Hoàn thành"><i class="fa-solid fa-check fa-xl"></i></a>
+                            <a  asp-action="Complete" 
+                                asp-route-id="@c.Id" 
+                                asp-route-restaurantId="@ViewBag.CurrentRestaurant" 
+                                asp-route-isMenu="false" 
+                                class="btn btn-success" 
+                                title="Hoàn thành">
+                                <i class="fa-solid fa-check fa-xl"></i>
+                            </a>
                         </th>
                     </tr>
                 }
@@ -72,7 +79,7 @@
                 <th></th>
             </tr>
 
-            @if(comboOrders.Count == 0){
+            @if(menuOrders.Count == 0){
                 <tr>
                     <th colspan="4" class="text-center text-warning"><h5>Danh sách trống</h5></th>
                 </tr>
@@ -85,7 +92,14 @@
                         <th>@c.Menu.Name</th>
                         <th class="text-center">@c.Quantity</th>
                         <th>
-                            <a href="" class="btn btn-success" title="Hoàn thành"><i class="fa-solid fa-check fa-xl"></i></a>
+                            <a  asp-action="Complete" 
+                                asp-route-id="@c.Id" 
+                                asp-route-restaurantId="@ViewBag.CurrentRestaurant" 
+                                asp-route-isMenu="true" 
+                                class="btn btn-success" 
+                                title="Hoàn thành">
+                                <i class="fa-solid fa-check fa-xl"></i>
+                            </a>
                         </th>
                     </tr>
                 }

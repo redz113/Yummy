@@ -1,0 +1,40 @@
+<div class="clock py-3 h4">
+    @{
+        DateTime date = DateTime.Now;
+    }
+    <span class="p-1 me-1 border border-dark">
+        <strong class="p-1 px-1 ">@date.Day.ToString()</strong> /
+        <strong class="p-1 px-1">@date.Month.ToString()</strong> /
+        <strong class="p-1 px-1">@date.Year.ToString()</strong>
+    </span>
+    <strong class="hours p-1 px-2 border border-dark">@date.Hour</strong>
+    <strong class="minutes p-1 px-2 border border-dark">@date.Minute</strong>
+    <strong class="seconds p-1 px-2 border border-dark">@date.Second</strong>
+</div>
+
+
+
+<script>
+    $(document).ready(function() {
+    function updateClock() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();   
+
+
+        // Thêm số 0 vào trước các số có một chữ số
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        // Cập nhật nội dung của các span
+        $('.hours').text(hours);
+        $('.minutes').text(minutes);
+        $('.seconds').text(seconds);
+    }
+
+    // Cập nhật đồng hồ mỗi giây
+    setInterval(updateClock, 1000);
+    });
+</script>

@@ -59,7 +59,6 @@ namespace AppFoods.Controllers
                                              .ToListAsync();
 
             if(restaurantIds.Count > 1){
-                ViewBag.CurrentRestaurant = restaurantId;
                 ViewBag.Restaurants = await _context.Restaurants.Where(r => restaurantIds.Contains(r.Id)).ToListAsync();
             }
 
@@ -67,8 +66,29 @@ namespace AppFoods.Controllers
                 ComboOrders = comboOrders,
                 MenuOrders = menuOrders
             };
-            
+
+            ViewBag.CurrentRestaurant = restaurantId;
             return View(order);
+        }
+
+        public async Task<IActionResult> Complete(int id, bool isMenu, int restaurantId = -1){
+            if(isMenu){
+                var menuOrder = await _context.MenuOrders.FirstOrDefaultAsync(m => m.Id == id);
+                if(menuOrder != null){
+                    menuOrder.Status = true;
+                    _context.MenuOrders.Update(menuOrder);
+                }
+            }
+            else
+            {
+                var comboOrder = await _context.ComboOrders.FirstOrDefaultAsync(m => m.Id == id);
+                if(comboOrder != null){
+                    comboOrder.Status = true;
+                    _context.ComboOrders.Update(comboOrder);
+                }
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", new {restaurantId = restaurantId});
         }
 
 

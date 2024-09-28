@@ -55,6 +55,16 @@ namespace AppFoods.Controllers
                                     .ToListAsync();
                 if(resId.Count > 0) restaurantId.AddRange(resId);
             }
+            else if(roleNames.Contains(RoleName.Chef))
+            {
+                var resId = await _context.Chefs
+                                .Where(c => c.UserId == user.Id)
+                                .Select(c => c.RestaurantId)
+                                .FirstOrDefaultAsync();
+
+                if(resId != null) restaurantId.Add(resId);
+
+            }
 
             return restaurantId;
         }
@@ -94,7 +104,7 @@ namespace AppFoods.Controllers
 
                 ViewBag.Locations = locations;
             }
-
+            ViewBag.TotalOn = await _context.Tables.Where(t => t.RestaurantId == restaurantId && t.Status == true).CountAsync();
             ViewBag.Restaurants = restaurants.Select(r => new {r.Id, r.Name}).ToList();
             ViewBag.CurrentFloor = location;
            return View(restaurant);
@@ -328,7 +338,58 @@ namespace AppFoods.Controllers
             return RedirectToAction("Index", new {location = build.Table.Location});
         }
 
+        public async Task<IActionResult> PayConfirm(int id){
+            Build? build = await _GetBuild(id);
+            if(build == null) return NotFound();
+
+            build = await _RemoveOrderNoConfirm(build);
+
+            // LƯU BUILD
+            int totalPriceMenu = build.MenuOrders.Sum(m => m.Quantity * m.Menu.Price);
+            int totalPriceCombos = build.ComboOrders.Sum(m => m.Quantity * m.Combo.Price);
+            Summary summary = new Summary(){
+                RestaurantId = build.Table.RestaurantId,
+                TableName = build.Table.Location + "." + build.Table.Name,
+                TotalPrice = totalPriceCombos + totalPriceMenu
+            };
+            
+            if(summary.TotalPrice > 0){
+                await _context.Summarys.AddAsync(summary);
+            }
+            
+            build.Table.Status = false;
+            build.Table.TimmOn = null;
+            _context.Tables.Update(build.Table);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", new {location = build.Table.Location});
+        }
+
+        private async Task<Build> _RemoveOrderNoConfirm(Build build){
+            var comboOrderRM = build.ComboOrders.Where(c => c.Status == false).ToList();
+            var menuOrderRM = build.MenuOrders.Where(c => c.Status == false).ToList();
+
+            if(comboOrderRM.Count > 0){
+                foreach(ComboOrder c in comboOrderRM){
+                    build.ComboOrders.Remove(c);
+                }
+            }
+
+            if(menuOrderRM.Count > 0){
+                foreach(MenuOrder m in menuOrderRM){
+                    build.MenuOrders.Remove(m);
+                }
+            }
+
+            _context.ComboOrders.RemoveRange(comboOrderRM);
+            _context.MenuOrders.RemoveRange(menuOrderRM);
+            await _context.SaveChangesAsync();
+            return build;
+        }
+
         // Id - Table Id
+        // LƯU DỮ LIỆU => XUẤT BUILD
         public async Task<IActionResult> ExportPdfBuild(int id)
         {
             Build? build = await _GetBuild(id);
@@ -353,22 +414,9 @@ namespace AppFoods.Controllers
                 return RedirectToAction("Details", new {id = build.Table.Id});
             }
 
-            
-            build.Table.Status = false;
-            build.Table.TimmOn = null;
-            
-
-            _context.ComboOrders.RemoveRange(comboOrderRM);
-            _context.MenuOrders.RemoveRange(menuOrderRM);
-            _context.Tables.Update(build.Table);
-
-            await _context.SaveChangesAsync();
-
             string html =  await this.RenderViewAsync<object>(RouteData ,"_BuildPartial", build, true);
             var result = _pdfService.GeneratePDF(html, DinkToPdf.Orientation.Portrait, DinkToPdf.PaperKind.A6);
-            File(result, "application/pdf", $"build-{DateTime.Now.Ticks}.pdf");
-            TempData["success"] = "Đã xuất hóa đơn thành công";
-            return RedirectToAction("Index", new {location = build.Table.Location}); 
+            return File(result, "application/pdf", $"build-{DateTime.Now.Ticks}.pdf");
         }
 
         public async Task<IActionResult> Build(int id){
