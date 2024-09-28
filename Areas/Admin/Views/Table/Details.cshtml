@@ -1,0 +1,110 @@
+@model Table
+
+@{
+    ViewData["Title"] = "Bàn " + Model.Location + "." + Model.Name;
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" asp-route-location="@Model.Location" class="text-dark"> Danh sách bàn</a>
+</div>
+<h2>
+    @ViewData["Title"]  
+    <a class="btn btn-primary" asp-action="Order" asp-route-id="@Model.Id">Đặt món</a>
+
+    @* <a class="btn btn-danger float-end" asp-action="Cancel" asp-route-id="@Model.Id">Hủy bàn</a> *@
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-danger d-none d-md-inline-block float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop-@Model.Id">
+        Hủy bàn
+    </button>
+</h2>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop-@Model.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Xác nhận hủy bàn?</h1>
+            </div>
+            <div class="modal-body">
+                <p>Đảm bảo chưa có món ăn nào được đưa lên.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form class="d-inline-block" asp-action="Cancel" asp-route-id="@Model.Id">
+                    <button class="btn btn-danger" type="submit">Xác nhận</button>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+<hr>
+
+@if(ViewBag.Pays.Count > 0){
+    List<Pay> pays = ViewBag.Pays;
+    <div class="row d-flex justify-content-center mx-1">
+        <div class="col-md-9 border border-secondary">
+            <table class=" table table-responsive table-hover">
+                <tr>
+                    <th colspan="5"><h3 class="text-success text-uppercase">Các món đã lên</h3></th>
+                </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Tên món</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>GxSL</th>
+                </tr>
+                @{
+                    double sum = 0;
+                }
+                @foreach(Pay p in pays.Where(m => m.Status == true).OrderBy(m => m.Time).ToList()){
+                    sum += p.PxQ;
+                    <tr>
+                        <td>1</td>
+                        <td>@Html.DisplayFor(m => p.Name)</td>
+                        <td>@Html.DisplayFor(m => p.Price)</td>
+                        <td>@Html.DisplayFor(m => p.Quantity)</td>
+                        <td>@Html.DisplayFor(m => p.PxQ)</td>
+                    </tr>
+                }
+            </table>
+
+            <div class="border border-top border-danger mb-3"></div>
+
+            <table class="table table-responsive table-hover">
+                <tr>
+                    <th colspan="5"><h3 class="text-warning text-uppercase">Các món chưa lên</h3></th>
+                </tr>
+
+                <tr>
+                    <th>#</th>
+                    <th>Tên món</th>
+                    <th>Giá</th>
+                    <th class="text-center">Số lượng</th>
+                    <th></th>
+                </tr>
+                @foreach(Pay p in pays.Where(m => m.Status == false).OrderBy(m => m.Time).ToList()){
+                    <tr>
+                        <td>1</td>
+                        <td>@Html.DisplayFor(m => p.Name)</td>
+                        <td>@Html.DisplayFor(m => p.Price)</td>
+                        <td class="text-center">@Html.DisplayFor(m => p.Quantity)</td>
+                        <td class="w-10">
+                            <a class="btn btn-sm btn-danger" asp-action="DeleteOrder" asp-route-id="@p.Id" asp-route-isMenu="@p.IsMenu" asp-route-tableId="@Model.Id">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <div class="border border-top border-success"></div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h3>Tạm tính: @sum.ToString("N2")</h3>
+                <a asp-action="ExportPdfBuild" asp-route-id="@Model.Id" class="btn btn-success float-end my-3">Xuất hóa đơn</a>
+            </div>
+        </div>
+    </div>
+}

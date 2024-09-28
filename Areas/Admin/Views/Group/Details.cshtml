@@ -1,0 +1,35 @@
+﻿@model AppFoods.Models.Group
+
+@{
+    ViewData["Title"] = "Thông tin nhóm";
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách nhóm</a>
+</div>
+
+<div>
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Parent)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Parent.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" class="btn btn-success" asp-route-id="@Model?.Id">Cập nhật</a> |
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</div>
+

@@ -1,0 +1,91 @@
+@model AppUser
+@{
+    ViewData["Title"] = "Thông tin nhân viên quản lý";
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách chuỗi cơ sở</a>
+</div>
+
+<div class="row mb-3 d-flex flex-md-row mt-5">
+    <div class="col-md-5 text-center">
+            <img id="selectedAvatar" src="@Model.AvatarImg"
+                    class="w-100 h-auto border border-3 square-1 img-fluid" alt="" />
+    </div>
+    
+    <div class="col-md-7">
+        <h4>@ViewData["Title"]</h4>
+        <hr>
+        <table class="table table-responsive">
+            <tr>
+                <td class="w-40 text-secondary pe-3">Họ và tên</td>
+                <td class="">@Html.DisplayFor(m => Model.Name)</td>
+            </tr>
+            <tr>
+                <td class="w-40 text-secondary pe-3">Địa chỉ Email</td>
+                <td class="">@Html.DisplayFor(m => Model.Email)</td>
+            </tr>
+            <tr>
+                <td class="w-40 text-secondary pe-3">Số điện thoại</td>
+                <td 
+                    @{
+                        if (Model.PhoneNumber != null)
+                        {
+                            @Model.PhoneNumber;
+                        }
+                        else
+                        {
+                            <span class="text-danger">Chưa cập nhật</span>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="w-40 text-secondary pe-3">Ngày sinh</td>
+                <td class="">
+                    @{
+                        if (Model.DateOfBirth != null)
+                        {
+                            @Model.DateOfBirth?.ToString("dd/MM/yyyy");
+                        }
+                        else
+                        {
+                            <span class="text-danger">Chưa cập nhật</span>
+                        }
+                     }
+                </td>
+            </tr>
+            <tr>
+                <td class="w-40 text-secondary pe-3">Giới tính</td>
+                <td class="">
+                    @{
+                        var gender = Model.Gender;
+                        if (gender == null)
+                        {
+                            <span class="text-danger">Chưa cập nhật</span>
+                        }
+                        else if (gender == 0)
+                        {
+                            <span>Nữ</span>
+                        }
+                        else if (gender == 1)
+                        {
+                            <span>Nam</span>
+                        }
+                        else if (gender == 2)
+                        {
+                            <span>Khác</span>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="w-40 text-secondary pe-3">Địa chỉ</td>
+                <td class="">@Html.DisplayFor(m => Model.Address)</td>
+            </tr>
+        </table>
+       <a asp-action="Details" asp-route-id="@ViewBag.Id" class="btn btn-secondary text-start">Quay lại</a>
+    </div>
+</div> 

@@ -1,0 +1,30 @@
+@model dynamic
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-danger d-none d-md-inline-block" data-bs-toggle="modal" data-bs-target="#staticBackdrop-@Model">
+  Xóa
+</button>
+<button type="button" class="btn btn-danger d-inline-block d-md-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop-@Model">
+  <i class="fa-solid fa-trash "></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop-@Model" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Xóa</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Xác nhận xóa?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <form class="d-inline-block" asp-action="Delete" asp-route-id="@Model">
+            <button class="btn btn-danger" type="submit">Xác nhận</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

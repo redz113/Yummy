@@ -1,0 +1,54 @@
+@model AddUserClaimModel
+@{
+    ViewData["Title"] = "Claim của user";
+    int i = 0;
+    var claims = ViewBag.Claims;
+}
+<h1>@ViewData["Title"] : @ViewBag.user.UserName</h1>
+<partial name="_StatusMessage" />
+
+
+<hr>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="row">
+                @foreach (var claim in claims)
+                {
+                    <div class="col-md-6">
+                        <input asp-for="@Model.Claims[i]" type="checkbox" />
+                        <label asp-for="@Model.Claims[i]" class="px-3 py-2">
+                            @claim.Key
+                        </label>
+                    </div>
+                    i++;
+                }
+            </div>
+            
+
+            <div class="form-group">
+                @if (ViewBag.userclaim != null)
+                {
+                    <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                    <input type="submit" value="Xóa" asp-route-claimid="@ViewBag.userclaim.Id" 
+                      class="btn btn-danger" asp-action="DeleteClaim" />
+                }
+                else 
+                {
+                    <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                }
+                
+
+                <a class="btn btn-secondary" asp-action="AddRole" asp-route-id="@ViewBag.user.Id">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

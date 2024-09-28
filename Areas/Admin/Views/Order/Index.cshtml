@@ -1,0 +1,96 @@
+@model Order
+
+@{
+    ViewData["Title"] = "Danh sách đơn";
+    List<ComboOrder> comboOrders = Model.ComboOrders;
+    List<MenuOrder> menuOrders = Model.MenuOrders;
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+
+<h2>@ViewData["Title"]</h2>
+<div>
+    @if(ViewBag.Restaurants != null){
+        foreach(Restaurant r in ViewBag.Restaurants){
+            string btn = "btn ";
+            if(r.Id == ViewBag.CurrentRestaurant){
+                btn += "btn-primary";
+            }
+            else
+            {
+                btn += "btn-secondary";
+            }
+            <a class="@btn" asp-action="Index" asp-route-restaurantId="@r.Id">
+                CS.@r.Name
+            </a>
+        }
+    }
+</div>
+<hr>
+
+<div class="row p-2">
+    <div class="col-md-6 ">
+        <h4>Combos</h4>
+        <table class="table table-primary table-striped table-responsive table-hover w-100">
+            <tr class="border-bottom border-dark">
+                <th>Bàn</th>
+                <th class="w-60">Combo</th>
+                <th class="text-center">SL</th>
+                <th></th>
+            </tr>
+
+            @if(comboOrders.Count == 0){
+                <tr>
+                    <th colspan="4" class="text-center text-warning"><h5>Danh sách trống</h5></th>
+                </tr>
+            }
+            else
+            {
+                foreach(ComboOrder c in comboOrders){
+                    <tr>
+                        <th>@c.Table.Location.@c.Table.Name</th>
+                        <th>@c.Combo.Name</th>
+                        <th class="text-center">@c.Quantity</th>
+                        <th>
+                            <a href="" class="btn btn-success" title="Hoàn thành"><i class="fa-solid fa-check fa-xl"></i></a>
+                        </th>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+
+    <div class="col-md-6">
+        <h4>Món riêng</h4>
+        <table class="table table-primary table-striped table-responsive table-hover w-100">
+            <tr class="border-bottom border-dark">
+                <th>Bàn</th>
+                <th class="w-60">Món</th>
+                <th class="text-center">SL</th>
+                <th></th>
+            </tr>
+
+            @if(comboOrders.Count == 0){
+                <tr>
+                    <th colspan="4" class="text-center text-warning"><h5>Danh sách trống</h5></th>
+                </tr>
+            }
+            else
+            {
+                foreach(MenuOrder c in menuOrders){
+                    <tr>
+                        <th>@c.Table.Location.@c.Table.Name</th>
+                        <th>@c.Menu.Name</th>
+                        <th class="text-center">@c.Quantity</th>
+                        <th>
+                            <a href="" class="btn btn-success" title="Hoàn thành"><i class="fa-solid fa-check fa-xl"></i></a>
+                        </th>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>
+

@@ -1,0 +1,44 @@
+@using AppFoods.Data
+@model CreateRoleModel
+@{
+    ViewData["Title"] = "Tạo role mới";
+    var claims = ViewBag.Claims;
+    int i = 0;
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách role</a>
+</div>
+<h2>@ViewData["Title"]</h2>
+<partial name="_StatusMessage"></partial>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3 form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control " />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+                
+            <div class="mb-3 form-group">
+                <label asp-for="Claims" class="form-label"></label><br />
+                
+                @Html.ListBoxFor(m => m.Claims, (IEnumerable <SelectListItem>) claims, new { @class = "p-2", size = "10" })
+            </div>
+                 <div class="mb-3 form-group">
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-action="Index">Danh sách các role</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

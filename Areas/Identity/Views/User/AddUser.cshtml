@@ -1,0 +1,48 @@
+﻿@using App.Data
+@using AppFoods.Areas.Identity.Models.User
+@model AddUserModel
+
+
+@{
+    ViewData["Title"] = "Thêm thành viên mới";
+    var roles = ViewBag.allRoles;
+    int count = ((List<string>)ViewBag.allRoles).Count();
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="col-md-6">
+    <form asp-controller="User" asp-action="AddUser" method="post">
+        <div class="form-floating mb-3">
+            <input asp-for="Name" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+            <label class="ps-2" asp-for="Name"></label>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+            <label class="ps-2" asp-for="Email"></label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Password" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+            <label class="ps-2" asp-for="Password"></label>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            @for (int i = 0; i < count; i++)
+            {
+                <div class="col-md-6">
+                    <input asp-for="@Model.RoleChecks[i]" type="checkbox" />
+                    <label asp-for="@Model.RoleChecks[i]" class="px-3 py-2">
+                        @roles[i]
+                    </label>
+                </div>
+            }
+        </div>
+
+
+        <button type="submit" class="btn btn-success">Thêm thành viên</button>
+    </form>
+</div>

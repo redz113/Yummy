@@ -1,0 +1,70 @@
+@model IEnumerable<AppFoods.Models.Restaurant>
+
+@{
+    ViewData["Title"] = "Danh sách các cơ sở của nhà hàng";
+    int i=0;
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+<h2>@ViewData["Title"]</h2>
+<hr>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Thêm cơ sở mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" title="Xem chi tiết">
+                    @(++i)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" title="Xem chi tiết">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" title="Xem chi tiết">
+                    @Html.DisplayFor(modelItem => item.Address)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" title="Xem chi tiết">
+                    @Html.DisplayFor(modelItem => item.City)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" title="Xem chi tiết">
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </a>
+            </td>
+            <td>
+                @Html.Partial("_ActionPartial", @item.Id)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

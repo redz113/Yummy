@@ -1,0 +1,88 @@
+@using AppFoods.Models
+@model AppFoods.Models.Restaurant
+
+@{
+    ViewData["Title"] = "Danh sách bàn";
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+
+@if(Model == null){
+    <h2 class="row"><span class="text-danger col-md-6">Tài khoản chưa được tham chiếu đến một cơ sở nào trong Chuỗi cơ sở có trên hệ thống</span></h2>
+}
+else
+{
+    @if(ViewBag.Restaurants != null && ViewBag.Restaurants.Count > 1){
+        
+        <div class="mb-2">
+            @foreach(var item in ViewBag.Restaurants){
+                string btn = "";
+                @if(item.Id == Model.Id){
+                    btn = "btn btn-secondary active";
+                    }else{
+                    btn = "btn btn-light";
+                    }
+                <a class="@btn" asp-action="Index" asp-route-restaurantId="@item.Id">CS.@item.Name</a>
+            }
+        </div>
+    }
+
+    <h2><span>@ViewData["Title"] - @Model.Name</span> <span class="d-none d-md-inline-block">(@Model.Address)</span></h2>
+    <div>
+        @if(ViewBag.Locations != null && Model.FloorNumber > 1){
+            string btn = "";
+            @foreach(var item in ViewBag.Locations){
+                @if(item.Id == ViewBag.CurrentFloor){
+                    btn = "btn btn-primary";
+                }else{
+                    btn = "btn btn-light";
+                }
+                <a class="@btn border border-secondary active" asp-action="Index" asp-route-restaurantId="@Model.Id" asp-route-location="@item.Id">@item.Name</a>
+            }
+        }
+    </div>
+    <hr>
+
+    <div class="row">
+        @if( ViewBag.Tables != null){
+            foreach(Table table in ViewBag.Tables){
+                <div class="col-md-4 mb-4" style="height: 200px;">
+                    <a class="text-dark" asp-action="Details" asp-route-id="@table.Id">
+                        <div class="bg-green border border-secondary w-100 h-100 m-1 p-2 text-center position-relative">
+                            <img src="~/img/layout/table2.png" class="img-fluid h-100 p-3 position-absolute top-50 start-50 translate-middle" alt="...">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    @if(table.Status){
+                                        <span class="border border-dark rounded-pill p-1">
+                                            <i class="fa-solid fa-circle" style="color: #00ff00;"></i>
+                                            ON
+                                        </span>
+                                    }else{
+                                        <span class="border border-dark rounded-pill p-1">
+                                            <i class="fa-solid fa-circle" style="color: #ff0000;"></i> 
+                                            OFF
+                                        </span>
+                                }
+                                </div>
+
+                                <h4 class="m-0">Bàn @table.Location.@table.Name </h4>
+
+                                @* <i class="fa-solid fa-bars fa-xl p-2"></i> *@
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+    </div>
+}
+
+
+
+
+
+
+
+

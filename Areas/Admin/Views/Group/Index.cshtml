@@ -1,0 +1,56 @@
+﻿@model List<Group>
+
+@{
+    ViewData["Title"] = "Danh sách nhóm";
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Thêm nhóm</a>
+    <a asp-action="Arrange" class="btn btn-warning"><i class="fa-solid fa-layer-group"></i> Sắp xếp</a>
+</p>
+<table class="table table-responsive">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.Name) *@
+                Tên nhóm
+            </th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.Parent) *@
+                Nhóm cha
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@{
+    int i = 1;
+}
+@foreach (var item in Model) {
+            <tr class="">
+                <td>@(i++)</td>
+                <td>
+                   @Html.Raw((item.Name).Replace("-", "&nbsp;&nbsp;"))
+                    @* @Html.DisplayFor(modelItem => item.Name) *@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Parent.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" class="btn btn-success d-none d-sm-inline-block" asp-route-id="@item.Id">Cập nhật</a>
+                    <a asp-action="Edit" class="btn btn-success d-inline-block d-sm-none" asp-route-id="@item.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <partial name="_DeletedModal" model="@item.Id"></partial>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

@@ -1,0 +1,102 @@
+@using AppFoods.Models
+@model Combo
+
+@{
+    ViewData["Title"] = "Cập nhật combo";
+    List<Menu> menus = ViewBag.ListMenu;
+    List<int> menuId = new List<int>();
+    int i = 0;
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách Combo</a>
+</div>
+<h2>@ViewData["Title"]</h2>
+<hr>
+
+<form asp-area="Admin" asp-controller="Combo" asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-4 d-flex flex-column align-items-center">
+        
+            <div class="my-3">
+                <label for="btnImage" class="btn">
+                    <img src="@Model.ImageSrc" alt="" class="rounded-3 square-1" id="displayImg">
+                </label>
+                <input type="file" name="UploadFile" class="d-none" id="btnImage" onchange="displaySelectedImage(event, 'displayImg')"></input>
+            </div>
+        </div>
+        <div class="col-md-8 border-start border-dark">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label bg-warning h5 px-2">Tên Combo</label>
+                    <input asp-for="Name" class="form-control" placeholder="Tên combo...">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                
+                <h5 class=""><span class="bg-warning px-2"><i class="fa-solid fa-bowl-food"></i> Các món trong combo</span></h5>
+                @* <div class="border-bottom border-dark"></div> *@
+                
+                @foreach(Group item in ViewBag.ListGroup){
+                    <div class="ms-2 mb-3">
+                        @{
+                            await _GetChildren(item, 0, Model.Menu);
+                        }
+                    </div>
+                }
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label bg-warning h5 me-2 px-2">Trạng thái hiển thị</label>
+                    <input type="radio" asp-for="Status" id="True" value="true" />
+                    <label for="True" class="me-3">Hiện</label>
+
+                    <input type="radio" asp-for="Status" id="False" value="false" />
+                    <label for="False">Ẩn</label>
+
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>   
+
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label bg-warning h5 me-2 px-2">Giá bán</label>
+                    <input asp-for="Price" class="p-2" placeholder="Giá bán...">
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>  
+
+                <input type="hidden" asp-for="ImageSrc" value="@Model.ImageSrc">
+                <input type="hidden" asp-for="Id">
+
+                <button type="submit" class="btn btn-success">Cập nhật</button>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </div>
+</form>
+
+
+
+
+@{
+    async Task _GetChildren(Group item, int level, string menuId)
+    {
+            List<string> listId = menuId.Split(",").ToList();
+            string prefix = string.Concat(Enumerable.Repeat("--", level));
+            string groupName = prefix + " " + item.Name;
+            <div class="row mt-3">
+                <h6>@groupName</h6>
+
+                @foreach(Menu menu in menus.Where(m => m.GroupId == item.Id)){
+                    
+                    <div class="col-md-6 form-check">
+                        <input type="checkbox" name="@menu.Id" id="@menu.Id" value="@menu.Id" @(listId.Contains(menu.Id.ToString()) ? "checked" : "") />
+                        <label class="form-label" for="@menu.Id">@menu.Name</label>
+                    </div>
+                    //i = i + 1;
+                }
+            </div>
+
+            if ((item.ChildrenGroup != null) && (item.ChildrenGroup.Count() > 0))
+            {
+                foreach (Group child in item.ChildrenGroup.OrderBy(m => m.Arrange))
+                {
+                    await _GetChildren(child, level + 1, menuId);
+                }
+            }
+    }
+}

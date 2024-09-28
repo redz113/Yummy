@@ -1,0 +1,166 @@
+
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Danh sách món ăn";
+    int i = 0;
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+
+<h2 class="">
+    @ViewData["Title"] 
+    <div class="fs-6 badge bg-warning">
+        @Model.Paging.TotalRecord món ăn
+
+    </div> 
+</h2>
+
+
+<div class="row p-1">
+    <div class="col-2 d-flex col-sm-4 align-items-center">
+        <a class="btn btn-light d-none d-md-inline-block  border border-dark" asp-action="Create"><i class="fa-solid fa-plus"></i> Thêm món mới</a>
+        <a class="btn btn-primary d-inline-block d-md-none" asp-action="Create"><i class="fa-solid fa-plus"></i></a>
+    </div>
+    <div class="col-10 col-sm-8">
+        
+            <div class="page-item disabled d-flex flex-row justify-content-end align-items-center">
+            <div class="w-100">
+                 <form asp-action="Index" method="get" class="d-flex flex-row">
+                    <select asp-for="GroupId" asp-items="ViewBag.Groups" class="px-2"></select>
+                    <input type="type" class=" border border-dark w-75  p-2" asp-for="SearchKey" placeholder="Search ..." />
+                    <input asp-for="SortByName" type="hidden" />
+                    <input asp-for="SortByPrice" type="hidden" />
+                        <button type="submit" class="btn btn-dark d-inline-block d-md-none"><i class="fa-solid fa-magnifying-glass fa-xl"></i></button>
+                        <button type="submit" class="btn btn-dark d-none d-md-inline-block">Tìm kiếm</button>
+                    
+                 </form> 
+            </div>
+    </div>
+</div>
+
+
+
+    <table class="table table-responsive">
+        
+        <tr>
+            <th>#</th>
+
+            <form asp-action="Index" method="get" class="">
+            <th class="align-items-center">
+                <span class="pe-2">Tên món ăn </span>
+                @* Check *@
+                <span class="">
+                        @if (Model.SortByName == true || Model.SortByName == null)
+                        {
+
+                        <label asp-for="SortByName">
+                            <button type="submit" class="btn btn-light p-1"><i class="fa-solid fa-sort-down fa-lg"></i></button>
+
+                        </label>
+
+                        <input asp-for="SortByName" type="hidden" value="false" />
+
+                        }
+                        else
+                        {
+                        <label asp-for="SortByName">
+                            <button type="submit" class="btn btn-light p-1"><i class="fa-solid fa-sort-up fa-lg"></i></button>
+
+                        </label>
+                        <input asp-for="SortByName" type="hidden" value="true" />
+
+                        }
+
+                    <input asp-for="SearchKey" type="hidden" />
+                    <input asp-for="GroupId" type="hidden" />
+
+                </span>
+            </th>
+            </form>
+            @* <th>Mô tả</th> *@
+            <form asp-action="Index" method="get" class="">
+            <th class="">
+                <span class="pe-2">Giá </span>
+                @* Check *@
+                <span class="">
+                        @if (Model.SortByPrice == true || Model.SortByPrice == null)
+                        {
+
+                        <label asp-for="SortByPrice">
+                            <button type="submit" class="btn btn-light p-1"><i class="fa-solid fa-sort-down fa-lg"></i></button>
+
+                        </label>
+
+                        <input asp-for="SortByPrice" type="hidden" value="false" />
+
+                        }
+                        else
+                        {
+                        <label asp-for="SortByPrice">
+                            <button type="submit" class="btn btn-light p-1"><i class="fa-solid fa-sort-up fa-lg"></i></button>
+
+                        </label>
+                        <input asp-for="SortByPrice" type="hidden" value="true" />
+
+                        }
+
+                    <input asp-for="SearchKey" type="hidden" />
+                    <input asp-for="GroupId" type="hidden" />
+
+                </span>
+            </th>
+            </form>
+            <th>Phân loại</th>
+            <th>Thao tác</th>
+        </tr>
+        
+
+        @foreach(Menu m in ViewBag.ListMenu){
+            
+                <tr>
+                    <td>
+                        <a class="" title="Xem thông tin chi tiết" asp-action="Detail" asp-route-id="@m.Id">
+                            @(++i)
+                        </a>
+                    </td>
+                    <td>
+                        <a class="" title="Xem thông tin chi tiết" asp-action="Detail" asp-route-id="@m.Id">
+                            @m.Name
+                        </a>
+                    </td>
+                    <td>
+                        <a class="" title="Xem thông tin chi tiết" asp-action="Detail" asp-route-id="@m.Id">
+                            @Html.DisplayFor(model => m.Price)
+                        </a>
+                    </td>
+                    <td>
+                        <a class="" title="Xem thông tin chi tiết" asp-action="Detail" asp-route-id="@m.Id">
+                           @{
+                               string name = m.Group.Name.Replace("-", "");
+                               if(m.Group.Parent != null){
+                                name += $" ({m.Group.Parent.Name.Replace("-", "")})";
+                               }
+                            }
+                            @name
+                        </a>
+                    </td>
+
+                    <td>
+                        <a class="btn btn-success d-none d-md-inline-block" asp-action="Edit" asp-route-id="@m.Id">Cập nhật</a>
+                        <a class="btn btn-success d-inline-block d-md-none" asp-action="Edit" asp-route-id="@m.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+                        
+                        <partial name="_DeletedModal" model="@m.Id">
+                    </td>
+                </tr>
+            
+        }
+    </table>
+
+
+
+<partial name="_PagingPartial" model="Model.Paging" />
+
+

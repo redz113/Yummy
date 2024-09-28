@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using AppFoods.Models
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+
+    @{
+        var user = await UserManager.GetUserAsync(User);
+    }
+@if(SignInManager.IsSignedIn(User))
+{
+    <!-- Example single danger button -->
+    <div class="btn-group navbar-right">
+        <button type="button" class="btn btn-light dropdown-toggle ps-0 text-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="@user.AvatarImg" class="rounded-circle square-5 d-none d-md-inline-block" />
+            @user.Name
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" asp-area="Identity" asp-controller="Manage" asp-action="Index">Hồ sơ cá nhân</a></li>
+            <li><a class="dropdown-item" asp-controller="Home" asp-action="AdminIndex">Trang quản lý</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <form asp-area="Identity" asp-controller="Account" asp-action="LogOff">
+            <li>
+                <button class="dropdown-item btn btn-light">
+                    Đăng xuất
+                </button>
+            </li>
+            </form>
+        </ul>
+    </div>
+    /*
+    <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Identity"  asp-controller="Manage" asp-action="Index" title="Manage">Xin chào @UserManager.GetUserName(User)!</a>
+            </li>
+            <li class="nav-item">
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">Đăng xuất</button>
+            </li>
+        </ul>
+    </form>
+    */
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+        </li>
+    </ul>
+}

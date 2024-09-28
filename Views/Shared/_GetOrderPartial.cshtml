@@ -1,0 +1,52 @@
+@using AppFoods.Models;
+@model Order
+
+@if(Model != null){
+   
+    
+    if (Model.ComboOrders.Count() > 0)
+    {
+        ComboOrder combosOrder = Model.ComboOrders.First();
+        string id = "combo-" + @combosOrder.ComboId;
+        <tr class="mb-3" id="@id">
+            <input type="hidden" name="combo-@combosOrder.ComboId" value="@combosOrder.ComboId" />
+            <td>
+                <strong>@combosOrder.Combo.Name</strong>
+            </td>
+            <td>
+                <strong>@Html.DisplayFor(m => combosOrder.Combo.Price)</strong>
+            </td>
+            <td>
+                <input class="form-control" type="number" name="combo-quantity-@combosOrder.ComboId" value="@combosOrder.Quantity" />
+            </td>
+            <td class="text-center">
+                <a onclick="return RemoveHtmlById('@id')" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+            </td>
+        </tr>
+    }
+
+    if (Model.MenuOrders.Count() > 0)
+    {
+        MenuOrder menuOrder = Model.MenuOrders.First();
+        string id = "menu-" + @menuOrder.MenuId;
+        <tr class="mb-3" id="@id">
+            
+            <input type="hidden" name="menu-@menuOrder.MenuId" value="@menuOrder.MenuId" />
+            
+            @* <td>1</td> *@
+            <td>
+                <strong>@menuOrder.Menu.Name</strong>
+            </td>
+            <td>
+                <strong>@Html.DisplayFor(m => menuOrder.Menu.Price)</strong>
+            </td>
+            <td>
+                <input class="form-control" type="number" min="0" name="menu-quantity-@menuOrder.MenuId" value="@menuOrder.Quantity" />
+            </td>
+            <td class="text-center">
+                <a onclick="return RemoveHtmlById('@id')" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+            </td>
+        </tr>
+    }
+}
+

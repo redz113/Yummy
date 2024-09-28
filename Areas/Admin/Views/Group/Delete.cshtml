@@ -1,0 +1,15 @@
+@model AppFoods.Models.Group
+
+@{
+    ViewData["Title"] = "Xóa";
+}
+
+<h3>Xác nhận xóa?</h3>
+<div>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+        <input type="submit" value="Xác nhận" class="btn btn-danger" />
+        
+    </form>
+</div>

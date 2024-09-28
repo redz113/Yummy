@@ -1,0 +1,64 @@
+@model IList<AppUser>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+<h2>Thông tin đầu bếp</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Thêm đầu bếp mới</a>
+</p>
+<table class="table table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>
+                Họ tên
+            </th>
+            <th>
+                Trình độ
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th> *@
+            <th>
+                Lương
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (AppUser item in Model) {
+
+        <tr>
+            <td>
+                <a class="text-dark" asp-action="Details" title="Xem chi tiêt" asp-route-id="@item.Id">@item.Name</a> 
+            </td>
+            @if(item.ChildrenChef.Count > 0){
+                Chef first = item.ChildrenChef.First();
+                <td>
+                    <a class="text-dark" asp-action="Details" title="Xem chi tiêt" asp-route-id="@item.Id">@first.Level</a> 
+                </td>
+                <td>
+                    <a class="text-dark" asp-action="Details" title="Xem chi tiêt" asp-route-id="@item.Id">@first.Salary</a> 
+                </td>
+            }else{
+                <td>
+                    <a class="text-dark" asp-action="Details" title="Xem chi tiêt" asp-route-id="@item.Id"><span class="text-danger">Chưa cập nhật</span></a> 
+                </td>
+                <td>
+                    <a class="text-dark" asp-action="Details" title="Xem chi tiêt" asp-route-id="@item.Id"><span class="text-danger">Chưa cập nhật</span></a> 
+                </td>
+            }
+            <td>
+                @* <a asp-action="Edit" asp-route-id="@item.Id">Cập nhật</a> 
+                <a class="text-dark" asp-action="Details" title="Xem chi tiêt" asp-route-id="@item.Id">Details</a> 
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+                @Html.Partial("_ActionPartial", item.Id)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

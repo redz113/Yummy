@@ -1,0 +1,99 @@
+@using AppFoods.Models
+@model Combo
+
+@{
+    ViewData["Title"] = "Cập nhật combo";
+    List<Menu> menus = ViewBag.ListMenu;
+    List<int> menuId = new List<int>();
+    int i = 0;
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách Combo</a>
+</div>
+<h2>@ViewData["Title"]</h2>
+<hr>
+
+@* <form asp-area="Admin" asp-controller="Combo" asp-action="Edit" method="post" enctype="multipart/form-data"> *@
+    <div class="row">
+        <div class="col-md-4 d-flex flex-column align-items-center">
+        
+            <div class="my-3">
+                <img src="@Model.ImageSrc" alt="" class="rounded-3 square-1" id="displayImg">
+            </div>
+        </div>
+        <div class="col-md-8 border-start border-dark">
+                <div class="mb-3">
+                    <h3>
+                        <span class="bg-info px-2">@Html.DisplayFor(c => c.Name)</span>
+                    </h3>
+                </div>
+                
+                <h5 class=""><span class="bg-warning px-2"><i class="fa-solid fa-bowl-food"></i> Các món trong combo</span></h5>
+                @* <div class="border-bottom border-dark"></div> *@
+                
+                <div class="ms-2  row">
+                    @foreach(var item in ViewBag.Menus){
+                        <p class="col-md-6">
+                            <strong class="text-secondary">@item.ToString()</strong>
+                        </p>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label h5 me-2 px-2">Trạng thái hiển thị</label>
+                    
+                    @if(Model.Status){
+                        <strong class="px-2 h5 text-white bg-success">Hiện</strong>
+                    }else{
+                        <strong class="px-2 h5 text-white bg-danger">Ẩn</strong>
+                    }
+                   
+                </div>   
+
+                <div class="mb-3">
+                    <label asp-for="Price" class="form-label h5 me-2 px-2">Giá bán</label>
+                    <strong class="bg-warning px-2 h5">
+                        @Html.DisplayFor(c => c.Price)
+                    </strong>
+                </div>  
+
+                <input type="hidden" asp-for="ImageSrc" value="@Model.ImageSrc">
+                <input type="hidden" asp-for="Id">
+
+                @Html.Partial("_ActionPartial", @Model.Id)
+        </div>
+    </div>
+@* </form> *@
+
+
+
+
+@{
+    async Task _GetChildren(Group item, int level, string menuId)
+    {
+            List<string> listId = menuId.Split(",").ToList();
+            string prefix = string.Concat(Enumerable.Repeat("--", level));
+            string groupName = prefix + " " + item.Name;
+            <div class="row mt-3">
+                <h6>@groupName</h6>
+
+                @foreach(Menu menu in menus.Where(m => m.GroupId == item.Id)){
+                    
+                    <div class="col-md-6 form-check">
+                        <input type="checkbox" name="@menu.Id" id="@menu.Id" value="@menu.Id" @(listId.Contains(menu.Id.ToString()) ? "checked" : "") />
+                        <label class="form-label" for="@menu.Id">@menu.Name</label>
+                    </div>
+                    //i = i + 1;
+                }
+            </div>
+
+            if ((item.ChildrenGroup != null) && (item.ChildrenGroup.Count() > 0))
+            {
+                foreach (Group child in item.ChildrenGroup.OrderBy(m => m.Arrange))
+                {
+                    await _GetChildren(child, level + 1, menuId);
+                }
+            }
+    }
+}

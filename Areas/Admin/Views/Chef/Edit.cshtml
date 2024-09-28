@@ -1,0 +1,84 @@
+@model AppFoods.Models.ChefDetailsModel
+
+@{
+    ViewData["Title"] = "Cập nhật thông tin";
+    var userInfo = ViewBag.UserInfo;
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách đầu bếp</a>
+</div>
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+<div class="row">
+    <div class="col-lg-8">
+        
+            <pre class="h4 mb-3 text-success"><strong>Thông tin đầu bếp</strong></pre>
+            <div class="d-block d-md-flex">
+                <div class="mb-3">
+                    <img src="@userInfo.AvatarImg" class="square-2 img-fluid" alt="NULL">
+                </div>
+                <div class="ps-3 h5 align-content-end m-0">
+                    <p><strong>Họ tên:</strong> @userInfo.Name</p>
+                    <p><strong>Email:</strong> @userInfo.Email</p> 
+                    <p><strong>Ngày sinh:</strong> @userInfo.DateOfBirth?.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Giới tính:</strong> 
+                        @{
+                            int gender = userInfo.Gender;
+                            switch(gender){
+                                case 0: <span>Nữ</span> break;
+                                case 1: <span>Nam</span> break;
+                                default: <span>Chưa xác định</span> break;
+                            }
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-75 border-bottom border-success border-3 mb-2"></div>
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger ps-2"></div>
+            
+            <div class="row">
+                <div class="col-md-5 form-group mb-3">
+                    <label asp-for="Chef.Level" class="form-label h6"></label>
+                    <select asp-for="Chef.Level" asp-items="@ViewBag.Levels" class="form-select">
+                        <option value="-1" selected>Chọn chuyên môn chính của đầu bếp</option>
+                    </select>
+                    <span asp-validation-for="Chef.Level" class="text-danger ps-2"></span>
+                </div>
+                <div class="col-md-5 form-group mb-3">
+                    <label asp-for="Chef.RestaurantId" class="form-label h6"></label>
+                    <select name="restaurantId" asp-formaction="RestaurantId" asp-items="@ViewBag.SelectRestaurant" class="form-select">
+                        <option value="-1" selected>Chọn cơ sở làm việc</option>
+                    </select>
+                    <span asp-validation-for="Chef.RestaurantId" class="text-danger ps-2"></span>
+                </div>
+                <div class="col-md-2 form-group mb-3">
+                    <label asp-for="Chef.Salary" class="form-label h6"></label>
+                    <input asp-for="Chef.Salary" class="form-control" min="0" />
+                    <span asp-validation-for="Chef.Salary" class="text-danger ps-2"></span>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Chef.Description" class="form-label h6"></label>
+                <textarea rows="3" asp-for="Chef.Description" class="form-control"></textarea>
+                <span asp-validation-for="Chef.Description" class="text-danger ps-2"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+            <input type="hidden" asp-for="@Model.UserId">
+            <input type="hidden" asp-for="@Model.Chef.UserId" value="@Model.UserId">
+            <input type="hidden" asp-for="@Model.Chef.Id" value="@Model.Chef.Id"> 
+        </form>
+    </div>
+</div>
+
+

@@ -1,0 +1,21 @@
+﻿@{
+    string message = (string) TempData["Success"];
+    string messageError =(string) TempData["Error"];
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js" crossorigin="anonymous"></script>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <script>
+        toastr.success('@Html.Raw(@message)', "Thông báo");
+    </script>
+}
+
+@if (!string.IsNullOrEmpty(messageError))
+{
+    <script>
+        toastr.error('@Html.Raw(messageError)', "Lỗi");
+    </script>
+}

@@ -1,0 +1,88 @@
+﻿
+@using AppFoods.Models;
+@model Build
+
+@{
+    Table table = Model.Table;
+    List<ComboOrder>? comboOrders = Model.ComboOrders;
+    List<MenuOrder> menuOrders = Model.MenuOrders;
+    int i = 1;
+    int sum = 0;
+}
+
+
+        <div class="card border-0 w-100" style="width: 100%;">
+            <div class="card-body">
+                <h3 style="text-align: center;">
+                    <pre class="card-title text-center mb-3">YUPSAN - Bàn @table.Location.@table.Name</pre>
+                </h3>
+                <pre class="card-subtitle mb-2 text-body-secondary"><strong class="">Cơ sở:</strong>  @table.Restaurant?.Address</pre>
+                <pre class="card-subtitle mb-2 text-body-secondary"><strong class="">Thời gian:</strong>  @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</pre>
+                
+                <h5 class="card-title text-center" style="text-align: center;">
+                    <div class="" style="text-align: center;">
+                        <pre>--------------------------</pre>
+                    </div>
+                    <pre class="">THANH TOÁN</pre>
+                </h5>
+                <table class="table table-responsive" style="width: 100%;">
+                    <tr>
+                        <th style="width: 10%;"><pre class="m-0">#</pre></th>
+                        <th style="width: 60%; text-align: left;"><pre class="m-0">Tên Món</pre></th>
+                        <th style="width: 10%;"><pre class="m-0">SL</pre></th>
+                        <th style="width: 20%; text-align: left;"><pre class="m-0">Giá</pre></th>
+                    </tr>
+
+                    @if (comboOrders?.Count > 0)
+                    {
+                        foreach (ComboOrder c in comboOrders.OrderBy(c => c.Time))
+                        {
+                            sum += (c.Quantity * c.Combo.Price);
+                            <tr>
+                                <td style="text-align: center;">
+                                    <pre class="m-0">@(i++)</pre>
+                                </td>
+                                <td>
+                                    <pre class="m-0">@c.Combo?.Name</pre>
+                                </td>
+                                <td style="text-align: center;">
+                                    <pre class="m-0">@c.Quantity</pre>
+                                </td>
+                                <td>
+                                    <pre class="m-0">@Html.DisplayFor(m => c.Combo.Price)</pre>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                    @if (menuOrders?.Count > 0)
+                    {
+                        foreach (MenuOrder c in menuOrders.OrderBy(c => c.Time))
+                        {
+                            sum += (c.Quantity * c.Menu.Price);
+                            <tr>
+                                <td style="text-align: center;">
+                                    <pre class="m-0">@(i++)</pre>
+                                </td>
+                                <td>
+                                    <pre class="m-0">@c.Menu?.Name</pre>
+                                </td>
+                                <td style="text-align: center;">
+                                    <pre class="m-0">@c.Quantity</pre>
+                                </td>
+                                <td>
+                                    <pre class="m-0">@Html.DisplayFor(m => c.Menu.Price)</pre>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+                <h3 class="text-end" style="text-align: right;">
+                    <pre>TỔNG TIỀN: @sum.ToString("N2")</pre>
+                </h3>
+            </div>
+        </div>
+
+
+
+

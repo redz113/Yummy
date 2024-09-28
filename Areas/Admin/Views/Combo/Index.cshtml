@@ -1,0 +1,43 @@
+﻿@using AppFoods.Models;
+@{
+    ViewData["Title"] = "Danh sách Combo";
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+<h2>@ViewData["Title"]</h2>
+
+<a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Thêm mới</a>
+
+<table class="table table-responsive">
+    <tr>
+        <th>#</th>
+        <th>Tên Combo</th>
+        <th>Giá bán</th>
+        <th>Trạng thái</th>
+        <th></th>
+    </tr>
+    @foreach(Combo c in  ViewBag.Combos){
+        <tr>
+            <td><a asp-action="Detail" asp-route-id="@c.Id">
+                1
+            </a></td>
+            <td><a asp-action="Detail" asp-route-id="@c.Id">
+                @Html.DisplayFor(m => c.Name)
+            </a></td>
+            <td><a asp-action="Detail" asp-route-id="@c.Id">
+                @Html.DisplayFor(m => c.Price)
+            </a></td>
+            <td><a asp-action="Detail" asp-route-id="@c.Id">
+                @if(c.Status){
+                    <span class="px-2 border border-success bg-success text-white rounded-pill">Hiện</span>
+                }else{
+                    <span class="px-2 border border-danger bg-danger text-white rounded-pill">Ẩn</span>
+                }
+            </a></td>
+            <td>
+                @Html.Partial("_ActionPartial", c.Id)
+            </td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,114 @@
+@using AppFoods.Models
+@model Order
+@{
+    ViewData["Title"] = "Đặt món";
+    Table table = @ViewBag.Table;
+}
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" asp-route-location="@table.Location" class="text-dark"> Danh sách bàn</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Details" asp-route-id="@table.Id" class="text-dark">Bàn @table.Location.@table.Name</a>
+</div>
+<h2>Bàn @table.Location.@table.Name - @ViewData["Title"]</h2>
+@if(table.TimmOn != null){
+    <p><strong>Thời gian vào: </strong> @table.TimmOn?.ToString("dd/MM/yyyy HH:mm:ss")</p>
+}
+<hr>
+<div class="row">
+    <div class="col-md-4">
+        @if(ViewBag.Combos != null){
+            <ul class="list-group"> <button class="list-group-item-secondary list-group-item-action text-start border-0 p-2" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapseCombos" 
+                    aria-expanded="false" 
+                    aria-controls="collapseExample">
+                    COMBOS
+            </button>
+
+            <div class="collapse" id="collapseCombos">
+                <div class="list-group">
+                    @foreach(Combo c in ViewBag.Combos){
+                        <a onclick="return orderOnclick(@c.Id, @table.Id, false)" class="list-group-item list-group-item-action list-group-item-primary">@c.Name</a>
+                    }
+                </div>
+            </div>
+                
+            </ul>
+        }
+
+        @if(ViewBag.Groups != null){
+            List<Menu> menus = ViewBag.Menus;
+            <div class="d-flex flex-column">
+                @foreach(Group g in ViewBag.Groups){
+                    <button class="list-group-item-secondary list-group-item-action text-start border-0 p-2" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#group-@g.Id" 
+                            aria-expanded="false" 
+                            aria-controls="collapseExample">
+                            @g.Name
+                    </button>
+
+                    <div class="collapse" id="group-@g.Id">
+                        <div class="list-group">
+                            @foreach(Menu m in menus.Where(m => m.GroupId == g.Id).ToList()){
+                                <button onclick="return orderOnclick(@m.Id, @table.Id, true)" class="list-group-item list-group-item-action list-group-item-primary">@m.Name</button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="col-md-8">
+        <form asp-action="Order" method="post">
+            <button class="btn btn-success float-end">Xác nhận</button>
+            <table class="table table-responsive table-hover table-light">
+                
+                <tr>
+                    @* <th class="w-10">STT</th> *@
+                    <th>Tên Món Ăn</th>
+                    <th class="w-10">Giá</th>
+                    <th class="w-25">Số lượng</th>
+                    <th class="w-10"></th>
+                </tr>
+                <tbody id="divResult">
+
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    function orderOnclick(menuId, tableId, isMenu){
+        var find = "";
+        if(isMenu == true){
+            find = "menu-" + menuId;
+        }else{
+            find = "combo-" + menuId;
+        }
+
+        if ($("#divResult").find("[id='" + find + "']").length == 0){
+            $.ajax({
+                url: "/danh-sach-ban/GetOrders",
+                data: {tableId: tableId, menuId: menuId, isMenu: isMenu},
+                success: function (result) {
+                    $("#divResult").append(result);   //append
+                }
+            });
+        }
+    }; 
+
+    function RemoveHtmlById(id) {
+        $("#divResult").find("[id='" + id + "']").remove();
+    };
+</script>
+
+

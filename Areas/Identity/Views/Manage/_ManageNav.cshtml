@@ -1,0 +1,52 @@
+﻿@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<div class="row text-center text-md-start d-none d-md-flex mb-3" style="min-height: 10vh">
+    <div class="col-md-5 p-0">
+        <img src="@user.AvatarImg" class="border rounded-circle square-3 p-2 img-fluid" />
+    </div>
+    <div class="col-md-7 p-0 d-flex flex-column justify-content-center">
+        <strong>@user.Name</strong>
+
+        <div class="">
+            <a asp-action="Index" class="text-link text-secondary"><i class="fa-solid fa-pen"></i> Sửa hồ sơ </a>
+        </div>
+    </div>
+
+</div>
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a class="d-flex align-items-center text-dark nav-link" id="profile" asp-area="Identity" asp-controller="Manage" asp-action="Index">
+            <i class="fa-solid fa-address-card fa-lg pe-3"></i>
+            <span>Hồ sơ</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="d-flex align-items-center text-dark nav-link" id="profile" asp-area="Identity" asp-controller="Manage" asp-action="Index">
+            <i class="fa-solid fa-cart-shopping fa-lg pe-3"></i>
+            <span>Giỏ hàng</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="d-flex align-items-center text-dark nav-link" id="profile" asp-area="Identity" asp-controller="Manage" asp-action="Index">
+            <i class="fa-solid fa-clipboard-list fa-lg pe-3"></i>
+            <span>Đơn mua</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="d-flex align-items-center text-dark nav-link" id="profile" asp-area="Identity" asp-controller="Manage" asp-action="Index">
+            <i class="fa-solid fa-map-location-dot fa-lg pe-3"></i>
+            <span>Địa chỉ</span>
+        </a>
+    </li>
+
+</ul>
+
+<hr class="d-block d-md-none" />

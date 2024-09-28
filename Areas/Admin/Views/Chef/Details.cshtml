@@ -1,0 +1,66 @@
+@model AppFoods.Models.ChefDetailsModel
+
+@{
+    ViewData["Title"] = "Cập nhật thông tin";
+    var userInfo = ViewBag.UserInfo;
+    Chef? chefInfo = Model.Chef;
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách đầu bếp</a>
+</div>
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+<div class="row">
+    <div class="col-lg-8">
+        
+            <pre class="h4 mb-3 text-success"><strong>Thông tin đầu bếp</strong></pre>
+            <div class="d-block d-md-flex">
+                <div class="mb-3">
+                    <img src="@userInfo.AvatarImg" class="square-2 img-fluid" alt="NULL">
+                </div>
+                <div class="ps-3 h5 align-content-end m-0">
+                    <p><strong>Họ tên:</strong> @userInfo.Name</p>
+                    <p><strong>Email:</strong> @userInfo.Email</p> 
+                    <p><strong>Ngày sinh:</strong> @userInfo.DateOfBirth?.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Giới tính:</strong> 
+                        @{
+                            int gender = userInfo.Gender;
+                            switch(gender){
+                                case 0: <span>Nữ</span> break;
+                                case 1: <span>Nam</span> break;
+                                default: <span>Chưa xác định</span> break;
+                            }
+                        }
+                    </p>
+                </div>
+            </div>
+            <div class="w-75 border-bottom border-success border-3 mb-2"></div>
+            <div class="p-2">
+                @if(chefInfo == null){
+                    <h5 class="text-danger">Chưa cập nhật thông tin</h5>
+                }else{
+                    <div class="h5">
+                        <p><strong>@Html.DisplayNameFor(m => chefInfo.Restaurant.Name):</strong> @chefInfo.Restaurant.Name</p>
+                        <p><strong>@Html.DisplayNameFor(m => chefInfo.Level):</strong> @chefInfo.Level</p>
+                        <p><strong>@Html.DisplayNameFor(m => chefInfo.Description):</strong> @chefInfo.Description</p>
+                        <p>
+                            <strong>@Html.DisplayNameFor(m => chefInfo.Salary):</strong> 
+                            @Html.DisplayFor(m => chefInfo.Salary)
+                        </p>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group mb-3">
+                @* <a asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-success">Cập nhật</a>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a> *@
+                @Html.Partial("_ActionPartial", Model.UserId)
+            </div>
+    </div>
+</div>
+
+

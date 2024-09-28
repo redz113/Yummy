@@ -1,0 +1,54 @@
+@model Menu
+
+@{
+    ViewData["Title"] = "Thông tin chi tiết";
+    SelectList ListClassify = ViewBag.ListClassify;
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách món ăn</a>
+</div>
+<h2>@ViewData["Title"]</h2>
+<hr>
+ 
+<form asp-area="Admin" asp-controller="Menu" asp-action="Delete" asp-route-id="Id" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-5 d-flex flex-column align-items-center">
+
+            <div class="my-3">
+                <label for="btnImage" class="btn">
+                    <img src="@Model.ImageSrc" alt="" class="rounded-3 square-1" id="displayImg">
+                </label>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <h4>Thông tin món ăn</h4>
+            <hr>
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" disabled placeholder="Tên món...">
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea rows="6" asp-for="Description" disabled class="form-control" placeholder="Mô tả..."></textarea>
+            </div>
+            <div class="row d-flex flex-row-reverse">
+                <div class="mb-3 col-md-6">
+                    <label asp-for="GroupId" class="form-label"></label>
+                    <input asp-for="Group.Name" disabled class="form-control">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" disabled class="form-control" placeholder="VND" min="1">
+                </div>
+            </div>
+            <input asp-for="Id" type="hidden">
+            <a class="btn btn-success d-none d-md-inline-block" asp-action="Edit" asp-route-id="@Model.Id">Cập nhật</a>
+            <a class="btn btn-success d-inline-block d-md-none" asp-action="Edit" asp-route-id="@Model.Id"><i class="fa-solid fa-pen-to-square"></i></a>
+
+            <partial name="_DeletedModal" model="@Model.Id">
+
+        </div>
+    </div>
+</form>

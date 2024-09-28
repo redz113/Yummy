@@ -1,0 +1,87 @@
+@model ChefModel
+
+@{
+    ViewData["Title"] = "Thêm đầu bếp mới";
+}
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách đầu bếp</a>
+</div>
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger ps-2"></div>
+            <div class="row">
+                <div class="col-md-6 form-group mb-3">
+                    <label asp-for="Name" class="form-label h6"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger ps-2"></span>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label asp-for="Email" class="form-label h6"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger ps-2"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 form-group mb-3">
+                    <label asp-for="DateOfBirth" class="form-label h6"></label>
+                    <input type="date" asp-for="DateOfBirth" class="form-control" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger ps-2"></span>
+                </div>
+                <div class="col-md-3 form-group mb-3">
+                    <label asp-for="Gender" class="form-label h6"></label>
+                    <select asp-for="Gender" class="form-select">
+                        <option value="-1" selected>Chọn giới tính</option>
+                        <option value="1">Nam</option>
+                        <option value="0">Nữ</option>
+                        <option value="2">Khác</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger ps-2"></span>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label asp-for="Chef.Level" class="form-label h6"></label>
+                    <select asp-for="Chef.Level" asp-items="@ViewBag.Levels" class="form-select">
+                        <option value="-1" selected>Chọn chuyên môn chính của đầu bếp</option>
+                    </select>
+                    <span asp-validation-for="Chef.Level" class="text-danger ps-2"></span>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Chef.Description" class="form-label h6"></label>
+                <textarea rows="3" asp-for="Chef.Description" class="form-control"></textarea>
+                <span asp-validation-for="Chef.Description" class="text-danger ps-2"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group mb-3">
+                    <label asp-for="RestaurantId" class="form-label h6"></label>
+                    <select asp-for="RestaurantId" asp-items="@ViewBag.SelectRestaurant" class="form-select">
+                        <option value="-1" selected>Chọn cơ sở làm việc</option>
+                    </select>
+                    <span asp-validation-for="RestaurantId" class="text-danger ps-2"></span>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label asp-for="Chef.Salary" class="form-label h6"></label>
+                    <input asp-for="Chef.Salary" class="form-control" min="0" value="0" />
+                    <span asp-validation-for="Chef.Salary" class="text-danger ps-2"></span>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="submit" value="Thêm mới" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+            <input type="hidden" asp-for="Chef.UserId" value="-1">
+            <input type="hidden" asp-for="Chef.RestaurantId" value="-1">
+        </form>
+    </div>
+</div>
+
+
