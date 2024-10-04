@@ -33,18 +33,18 @@ namespace AppFoods.Services
             /// Password:   1
             /// 
 
-            var user = await _userManager.FindByEmailAsync("adminitrator@example.com");
+            var user = await _userManager.FindByEmailAsync("admin@example.com");
             if (user == null)
             {
                 var userAdmin = new AppUser()
                 {
-                    Name = "Administrator",
-                    UserName = "administrator",
-                    Email = "adminitrator@example.com",
+                    Name = "Admin Account",
+                    UserName = "admin",
+                    Email = "admin@example.com",
                     EmailConfirmed = true
                 };
 
-                await _userManager.CreateAsync(userAdmin, "administrator123");
+                await _userManager.CreateAsync(userAdmin, "123456");
                 await _userManager.AddToRoleAsync(userAdmin, RoleName.Administrator);
             }
 
@@ -53,14 +53,29 @@ namespace AppFoods.Services
             {
                 var userManager = new AppUser()
                 {
-                    Name = "Manager",
+                    Name = "Manager Account",
                     UserName = "manager",
                     Email = "manager@example.com",
                     EmailConfirmed = true
                 };
 
-                await _userManager.CreateAsync(userManager, "manager123");
+                await _userManager.CreateAsync(userManager, "123456");
                 await _userManager.AddToRoleAsync(userManager, RoleName.Manager);
+            }
+
+            var chef = await _userManager.FindByEmailAsync("chef@example.com");
+            if (manager == null)
+            {
+                var chefManager = new AppUser()
+                {
+                    Name = "Chef Account",
+                    UserName = "chef",
+                    Email = "chef@example.com",
+                    EmailConfirmed = true
+                };
+
+                await _userManager.CreateAsync(chefManager, "123456");
+                await _userManager.AddToRoleAsync(chefManager, RoleName.Chef);
             }
 
         }

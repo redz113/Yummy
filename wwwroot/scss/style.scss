@@ -1,0 +1,11 @@
+@for $i from 1 through 100 {
+  .h-#{$i} {
+    height: #{$i*1%} !important;
+  }
+}
+
+@for $i from 0 through 5{
+  .z-#{$i} {
+    z-index: $i !important;
+  }
+}

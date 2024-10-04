@@ -3,13 +3,13 @@
         DateTime date = DateTime.Now;
     }
     <span class="p-1 me-1 border border-dark">
-        <strong class="p-1 px-1 ">@date.Day.ToString()</strong> /
-        <strong class="p-1 px-1">@date.Month.ToString()</strong> /
-        <strong class="p-1 px-1">@date.Year.ToString()</strong>
+        <strong class="p-1 px-1 ">@date.ToString("dd")</strong> /
+        <strong class="p-1 px-1">@date.ToString("MM")</strong> /
+        <strong class="p-1 px-1">@date.ToString("yyyy")</strong>
     </span>
-    <strong class="hours p-1 px-2 border border-dark">@date.Hour</strong>
-    <strong class="minutes p-1 px-2 border border-dark">@date.Minute</strong>
-    <strong class="seconds p-1 px-2 border border-dark">@date.Second</strong>
+    <strong class="hours p-1 px-2 border border-dark">@date.ToString("HH")</strong>
+    <strong class="minutes p-1 px-2 border border-dark">@date.ToString("mm")</strong>
+    <strong class="seconds p-1 px-2 border border-dark">@date.ToString("ss")</strong>
 </div>
 
 

@@ -8,8 +8,12 @@
     var roles = ViewBag.allRoles;
     int count = ((List<string>)ViewBag.allRoles).Count();
 }
-
-<h1>@ViewData["Title"]</h1>
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách thành viên</a>
+</div>
+<h2>@ViewData["Title"]</h2>
 
 <div class="col-md-6">
     <form asp-controller="User" asp-action="AddUser" method="post">
@@ -44,5 +48,6 @@
 
 
         <button type="submit" class="btn btn-success">Thêm thành viên</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
     </form>
 </div>

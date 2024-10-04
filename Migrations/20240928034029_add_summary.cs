@@ -1,4 +1,6 @@
 ﻿using System;
+using AppFoods.Models;
+using Bogus;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

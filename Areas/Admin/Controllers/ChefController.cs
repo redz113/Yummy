@@ -162,7 +162,11 @@ namespace AppFoods.Areas_Admin_Controllers
             var chef = await _context.Chefs
                         .FirstOrDefaultAsync(c => c.UserId == id);
             
-            if(chef == null) chef = new Chef();
+            if(chef == null) chef = new Chef(){
+                Description = "",
+                Level = "",
+                Salary = 0
+            };
 
             ChefDetailsModel model = new ChefDetailsModel(){
                 UserId = id,

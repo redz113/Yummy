@@ -1,10 +1,17 @@
 @model AddUserClaimModel
 @{
-    ViewData["Title"] = "Claim của user";
+    ViewData["Title"] = "Quyền truy cập của tài khoản";
     int i = 0;
     var claims = ViewBag.Claims;
 }
-<h1>@ViewData["Title"] : @ViewBag.user.UserName</h1>
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a asp-action="Index" class="text-dark"> Danh sách thành viên</a>
+    <i class="fa-solid fa-chevron-left px-2"></i>
+    <a class="text-dark" asp-action="AddRole" asp-route-id="@ViewBag.user.Id">Thiết lập</a>
+</div>
+<h2>@ViewData["Title"] : @ViewBag.user.Name</h2>
 <partial name="_StatusMessage" />
 
 

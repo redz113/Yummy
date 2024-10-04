@@ -99,17 +99,14 @@ namespace App.Areas.Identity.Controllers
             var model = new AddUserRoleModel();
             if (string.IsNullOrEmpty(id))
             {
-                return Content("1");
-                return NotFound($"Không có user");
+                return NotFound();
             }
 
             model.user = await _userManager.FindByIdAsync(id);
 
             if (model.user == null)
             {
-                return Content("2");
-
-                return NotFound($"Không thấy user, id = {id}.");
+                return NotFound();
             }
 
             //model.RoleNames = (await _userManager.GetRolesAsync(model.user)).ToList();
@@ -126,14 +123,14 @@ namespace App.Areas.Identity.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return NotFound($"Không có user");
+                return NotFound();
             }
 
             model.user = await _userManager.FindByIdAsync(id);
 
             if (model.user == null)
             {
-                return NotFound($"Không thấy user, id = {id}.");
+                return NotFound();
             }
             
             var roleNameNew = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
@@ -165,14 +162,12 @@ namespace App.Areas.Identity.Controllers
             var resultAdd = await _userManager.AddToRolesAsync(model.user,addRoles);
             if (!resultAdd.Succeeded)
             {
-                return Content("2");
-
                 ModelState.AddModelError(resultAdd);
                 return View(model);
             }
 
 
-            TempData["Success"] = $"Đã cập nhật role cho user: {model.user.UserName}";
+            TempData["Success"] = $"Đã cập nhật thành công.";
 
             return RedirectToAction("Index");
         }
@@ -230,7 +225,7 @@ namespace App.Areas.Identity.Controllers
                 return View(model);
             }
 
-            StatusMessage = $"Vừa cập nhật mật khẩu cho user: {user.UserName}";
+            TempData["success"] = $"Đã đặt lại mật khẩu cho {user.Name}";
 
             return RedirectToAction("Index");
         }        

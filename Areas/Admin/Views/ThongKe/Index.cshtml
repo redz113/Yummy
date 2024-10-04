@@ -1,0 +1,419 @@
+@model List<ThongKe>
+
+@{
+    ViewData["Title"] = "Thống kê";
+    DateTime now = DateTime.Now;
+}
+
+<h2>@ViewData["Title"]</h2>
+@if(ViewBag.Restaurants != null && ViewBag.Restaurants.Count > 1){
+    <div class="mb-2">
+        @foreach(var item in ViewBag.Restaurants){
+            string btn = "";
+            @if(item.Id ==  ViewBag.CurrentRestaurant){
+                btn = "btn btn-secondary active";
+                }else{
+                btn = "btn btn-light";
+                }
+            <a class="@btn" asp-action="Index" 
+                            asp-route-restaurantId="@item.Id">CS.@item.Name</a>
+        }
+    </div>
+}
+<hr>
+
+
+<div class="row mb-5" id="year">
+    <div class="col-md-8">
+        <div class="">
+            <div class="row mb-4">
+                @foreach(ThongKe t in Model){
+                    <div class="col-md-6 border border-3 p-3 bg-green">
+                    <div class="h4 text-start bg-pink p-2"><strong>@t.Restaurant.Name</strong></div>
+                    <div class="h5"><strong>Số bàn: </strong> @t.Restaurant.TableNumber </div>
+                    <div class="h5"><strong>Doanh thu:</strong></div>
+                    <ul class="h5">
+                        <li class="mb-2">
+                            <strong>Hôm nay: </strong> $@t.TotalDay.ToString("N2")
+                            <span class="text-success ms-3">
+                                <i class="fa-solid fa-arrow-turn-up"></i> 25%
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <strong>Tháng: </strong> $@t.TotalMonth.ToString("N2")
+                            <span class="text-danger ms-3">
+                                <i class="fa-solid fa-arrow-turn-up fa-flip-vertical"></i> 5%
+                            </span>
+                        </li>
+                        <li class="mb-2">
+                            <strong>Năm: </strong> $@t.TotalYear.ToString("N2")
+                            <span class="text-success ms-3">
+                                <i class="fa-solid fa-arrow-turn-up"></i> 25%
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    @* BIỂU ĐỒ QUẠT -  THỐNG KÊ THU NHẬP THEO THÁNG TRONG NĂM *@
+    <div class="col-sm-10 col-md-4 text-center">
+        <!-- Canvas để vẽ biểu đồ -->
+        <h4 class="text-center mt-3">Biểu đồ thu nhập năm 2024</h4>
+        <div class="justify-content-center">
+            <canvas class="w-100" id="myPieChart"></canvas>
+        </div>
+        
+    </div>
+    @* END *@
+</div>
+
+@* BIỂU ĐỒ Năm -  THỐNG KÊ THU NHẬP THEO THÁNG TRONG NĂM *@
+    <div class="mb-5 p-3 border border-3">
+        <!-- Canvas để vẽ biểu đồ -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="text-start">
+                <h3 class="">Biểu đồ thu nhập trong năm <span id="CurrentYear"></span></h3>
+                @* <p class="h5 text-secondary mb-0">Tổng: <span id="tongNam"></span></p> *@
+            </div>
+
+            @* DROPDOWN *@
+            <div class="dropdown">
+                <a class="btn btn-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    @for(int i = 0; i <= 3; i++){
+                        <li>
+                            <button class="w-100 btn" name="btnMonthInYear" value="@(now.Year - i)">Năm @(now.Year - i)</button>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="justify-content-center">
+            <canvas class="w-100 h-100" id="myBarChartYear"></canvas>
+        </div>
+        
+    </div>
+    @* END *@
+
+
+
+@* THỐNG KÊ THU NHẬP THEO NGÀY TRONG THÁNG THÁNG *@
+<div class="mb-5 w-100 p-3 border border-3">
+    <div class="bg-light text-center rounded">
+
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="text-start">
+                <div class="h3 mt-2">Biểu đồ thu nhập trong tháng <span id="CurrentMonth"></span>/@now.Year</div>
+                <p class="h5 text-secondary">Tổng: <span id="tongThang">1</span></p>
+            </div>
+
+            @* DROPDOWN *@
+            <div class="dropdown">
+                <a class="btn btn-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    @for(int i = 12; i >= 3; i = i-3){
+                        <li class="text-center p-2 w-100">
+                            <div class="d-flex justify-content-between">
+                                <button class="mx-1 px-4 btn btn-light border" name="btnDayInMonth" value="@(i)">@(i)/@(now.Year)</button>
+                                <button class="mx-1 px-4 btn btn-light border" name="btnDayInMonth" value="@(i-1)">@(i-1)/@(now.Year)</button>
+                                <button class="mx-1 px-4 btn btn-light border" name="btnDayInMonth" value="@(i-2)">@(i-2)/@(now.Year)</button>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="justify-content-center">
+            <canvas class="w-100 h-100" id="myLineChart"></canvas>
+        </div>
+    </div>
+</div>
+@* END *@
+
+
+<input type="hidden" name="restaurantId" id="restaurantId" value="@ViewBag.CurrentRestaurant">
+
+
+
+
+
+
+
+
+
+    <!-- Tạo biểu đồ với Chart.js -->
+    <script>
+        const restaurantId = $('#restaurantId').val();
+
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+
+        let colors = [];
+            for(let i=0;i<20;i++){
+                colors.push(getRandomColor());
+            }
+        var i = colors.length;
+        
+        window.addEventListener("load", function(){
+            const currentYear = new Date().getFullYear();
+            const currentMonth = new Date().getMonth() + 1;                 // Thời gian ngày tháng trong js bắt đầu từ 0
+
+            $('#CurrentYear').html(currentYear);
+            $('#CurrentMonth').html(currentMonth);
+
+            getBarChartYear(restaurantId, currentYear);
+            getPieChart(restaurantId);
+            getLineChart(restaurantId, currentMonth)
+        });
+                
+        $('[name = btnMonthInYear]').click(function(e) {
+            e.preventDefault();
+            const year = this.value;
+            const restaurantId = $('#restaurantId').val();
+            $('#CurrentYear').html(year);
+            
+            getBarChartYear(restaurantId, year);
+        });
+
+        @* BIỂU ĐỒ CỘT *@
+        function getBarChartYear(restaurantId, year){
+            $.ajax({
+                url: '/thong-ke/AjaxGetDataMonthSummary',
+                type: 'GET', 
+                data: {
+                    restaurantId: restaurantId,
+                    year: year
+                },
+                success: function(data){
+                    @* const labels = data.map(item => "Tháng " + item.key);
+                    // Biến chứa doanh thu
+                    const doanhThu = data.map(item => item.total);
+                    const datasets = {
+                                label: '$',
+                                data: doanhThu,  // Dữ liệu doanh thu
+                                backgroundColor: 'rgba(0, 255, 0, 0.5)',  // Màu nền của cột
+                                borderColor: 'rgba(0, 255, 0, 1)',        // Màu viền của cột
+                                borderWidth: 1,                                // Độ dày viền
+                                pointStyle: 'rect', // Kiểu hiển thị các điểm dữ liệu
+                                pointRadius: 10, // Bán kính điểm dữ liệu
+                                pointHoverRadius: 12, // Bán kính điểm khi hover
+                                fill: true
+                            }
+                    const tongDoanhThu = doanhThu.reduce((pre, cur) => pre + cur, 0);
+                    $('#tongNam').html(formatter.format(tongDoanhThu))
+                    $('#myBarChartYear').html(""); *@
+                    console.log(i);
+                    const labels = data[0].data.map(d => "Tháng " + d.key);
+                    const datasets = data.map(d => {
+                        const color = getRandomColor();
+                        return {
+                            label: d.name,
+                            data: d.data.map(m => m.total),  // Dữ liệu doanh thu
+                            backgroundColor: colors[i],  // Màu nền của cột
+                            borderColor: color[i],        // Màu viền của cột
+                            borderWidth: 1,                                // Độ dày viền
+                            @* pointStyle: 'rect', // Kiểu hiển thị các điểm dữ liệu
+                            pointRadius: 10, // Bán kính điểm dữ liệu
+                            pointHoverRadius: 12, // Bán kính điểm khi hover *@
+                            fill: true
+                        }
+                        i--;
+                    })
+
+                    // Tạo biểu đồ cột (bar chart)
+                    const ctx = document.getElementById('myBarChartYear').getContext('2d');
+                    if (window.myBarChartYear.id > -1) {
+                        window.myBarChartYear.destroy();  // Hủy biểu đồ cũ trước khi tạo mới
+                    }
+
+                    window.myBarChartYear = new Chart(ctx, {
+                        type: 'bar',  // Xác định loại biểu đồ là "bar"
+                        data: {
+                            labels: labels,  // Nhãn (tháng)
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'  // Vị trí của chú thích
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    max: 200000,
+                                    beginAtZero: true  // Bắt đầu trục Y từ 0
+                                }
+                            }
+                        }
+                    });
+                                
+                },
+                error: function(){
+                    console.log("AjaxGetDataMonthSummary Failed");
+                }
+            });
+        }
+
+        @* BIỂU ĐỒ QUẠT *@
+        function getPieChart(restaurantId){
+            $.ajax({
+                url: '/thong-ke/AjaxGetDoanhThu',
+                type: 'GET',
+                data: { restaurantId: restaurantId},
+                success: function(data){
+                    var labels = data.map(i => "Năm " + i.key);
+                    const datas = data.map(i => i.total);
+                    console.log(data);
+
+                    const ctx = document.getElementById('myPieChart').getContext('2d');
+                    const myPieChart = new Chart(ctx, {
+                        type: 'doughnut',  // Hoặc 'doughnut' cho biểu đồ hình vòng
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Doanh thu',
+                                data: datas,  // Dữ liệu doanh thu
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true, // Tự động co giãn kích thước theo màn hình
+                            plugins: {
+                                legend: {
+                                    position: 'top', // Vị trí chú thích
+                                },
+                                tooltip: {
+                                    enabled: true, // Hiển thị tooltip khi di chuột
+                                }
+                            }
+                        }
+                    });
+                    console.log("AjaxGetDoanhThu Success");
+                },
+                error: function(){
+                    console.log("AjaxGetDoanhThu Failed");
+                }
+            });
+        }
+        
+        @* DIỂU ĐỒ ĐƯỜNG *@
+        $('[name=btnDayInMonth]').click(function(e){
+            e.preventDefault;
+
+            var month = this.value;
+            var restaurantId = $('#restaurantId').val();
+            $('#CurrentMonth').html(month);
+
+            getLineChart(restaurantId, month);    
+        });
+
+        @* BIỂU ĐỒ ĐƯỜNG *@
+        function getLineChart(restaurantId, month){
+            console.log(colors);
+            $.ajax({
+                url: '/thong-ke/AjaxGetDataDaySummary',
+                type: 'GET',
+                data: {
+                    restaurantId: restaurantId,
+                    month: month
+                },
+                success: function(data){
+                    const labels = data.map(i => i.key + "/" + month);
+                    const totals = data.map(i => i.total);
+                    console.log("Line: " + totals);
+                    const tongThang = totals.reduce((pre, cur) => pre + cur, 0);
+                    $('#tongThang').html(formatter.format(tongThang));
+
+                    const ctx = document.getElementById('myLineChart').getContext('2d');
+
+                    if(window.myLineChart.id > -1){
+                        window.myLineChart.destroy();
+                    }
+
+                    window.myLineChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '$',
+                                data: totals,
+                                backgroundColor: 'rgba(54, 162, 235, 0.75)',
+                                @* borderColor: 'rgba(54, 162, 235, 1)', *@
+                                @* borderWidth: 2, *@
+                                @* pointStyle: 'rect', // Kiểu hiển thị các điểm dữ liệu *@
+                                pointRadius: 8, // Bán kính điểm dữ liệu
+                                pointHoverRadius: 16, // Bán kính điểm khi hover 
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false,
+                                    position: 'top'  // Vị trí của chú thích
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: false  // Bắt đầu trục Y từ 0
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function(){
+                    console.log("AjaxGetDataDaySummary Failed");
+                }
+            });
+        
+        }
+        
+        function GetDayInMonth(month){
+            let now = new Date();
+            let date = new Date(now.getFullYear, month, 0);
+            let day = date.getDate();
+            let dayInMonth = Array.from({length: day}, (v, i) => i + 1 + "/" + month);
+            return dayInMonth;
+        }
+
+         // Hàm tạo màu ngẫu nhiên
+        function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+        }
+    </script>
+
+
+
+ 

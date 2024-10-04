@@ -13,18 +13,12 @@
                 <h2>@ViewData["Title"]</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="row">
-                    <div class="col-md-6 form-floating mb-3">
-                        <input asp-for="Name" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                        <label class="ps-4" asp-for="Name"></label>
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6 form-floating mb-3">
-                        <input asp-for="UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                        <label class="ps-4" asp-for="UserName"></label>
-                        <span asp-validation-for="UserName" class="text-danger"></span>
-                    </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Name" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label class="" asp-for="Name"></label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
+
 
                 <div class="form-floating mb-3">
                     <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />

@@ -6,6 +6,11 @@
     ViewData["Title"] = "Danh sách các thành viên";
     var me = await _userManager.GetUserAsync(User);
 }
+
+<div class="mb-4 d-flex align-items-center">
+    <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
+</div>
+
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage"></partial>
 <p>Tổng số thành viên: @Model.totalUsers</p>

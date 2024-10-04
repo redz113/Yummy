@@ -58,7 +58,7 @@ namespace AppFoods.Models
 
         [Display(Name = "Giới tính")]
         [Required(ErrorMessage = "Phải nhập {0}")]
-        public int Gender {get; set;}
+        public int? Gender {get; set;}
 
         [Display(Name = "Cơ sở làm việc")]
         public int RestaurantId {get; set;}

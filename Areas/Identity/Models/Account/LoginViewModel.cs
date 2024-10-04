@@ -12,8 +12,8 @@ namespace App.Areas.Identity.Models.AccountViewModels
     public class LoginViewModel
     {
         [Required(ErrorMessage = "Phải nhập {0}")]
-        [Display(Name = "Địa chỉ email hoặc tên tài khoản")]
-        public string UserNameOrEmail { get; set; }
+        [Display(Name = "Tên đăng nhập")]
+        public string Email { get; set; }
 
 
         [Required]

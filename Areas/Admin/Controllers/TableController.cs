@@ -73,6 +73,10 @@ namespace AppFoods.Controllers
         {
 
             var restaurantIds = await _GetRestaurantIdOfUser();
+            if(restaurantIds.Count == 0){
+                TempData["success"] = "Ban chưa được cấp quyền";
+                return RedirectToAction("Index", "Home");
+            }
 
             var restaurants = await _context.Restaurants.Where(r => restaurantIds.Contains(r.Id)).ToListAsync();
 

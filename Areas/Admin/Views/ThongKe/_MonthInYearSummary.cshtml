@@ -1,0 +1,58 @@
+﻿@model List<DataThongKe>
+
+@{
+    DateTime now = DateTime.Now;
+    int maxMonth = ViewBag.MaxPriceInMonth;
+}
+
+<div class="w-100 position-relative" id="dataMonthInYear">
+    <span class="h5 p-2 bg-dark opacity-50 text-white position-absolute top-0 end-0">$@Model.Sum(m => m.Total).ToString("N2")</span>
+    <div class="pt-4 d-flex flex-column justify-content-between text-end bg-green" style="height: 400px;" >
+        <div class="pt-4 d-flex align-items-end justify-content-start w-100 h-100 border-bottom border-3 border-dark text-white text-center pe-4">
+            @for(int i = 1; i <= 12; i++){
+                bool flag = true;
+                foreach(DataThongKe m in Model){
+                    if(m.Key == i){
+                        int h = Int32.Parse(Math.Round((m.Total/1000.0), 0).ToString()) * 100 / maxMonth;
+                        string bg = "";
+                        bg = h > 100 ? "bg-success" : h < 10 ? "bg-danger" : "bg-primary";
+                        if(h > 100) h = 100;
+                        if(h <= 0) h = 1;
+                        <div    onmouseover="return MouseOver('month'+ @i)" 
+                                onmouseout="return MouseOut('month' + @i)" 
+                                class="ms-1 h-@(h) @bg  position-relative" 
+                                style="width: 7% !important;">
+                            <span id="month@(i)" class="z-3 float-end d-none p-2 btn btn-secondary position-absolute top-0 start-0 translate-middle text-start">
+                                <strong>Tháng @i</strong><br>
+                                <strong>$@m.Total.ToString("N2")</strong>
+                            </span>
+                        </div>
+                        flag = false;
+                        break;
+                    }
+                
+                }
+                if(flag){
+                    <div class="ms-1 h-0 bg-danger" style="width: 7% !important; "></div>
+                    flag = true;
+                }
+            }
+
+        </div>
+        <div class="d-flex align-items-end justify-content-start w-100 text-center text-secondary bg-light pe-4 pt-4" style="height: 1rem;">
+            @for(int i = 1; i <= 12; i++){
+                if(now.Month == i){
+                    <div class="ms-1  text-dark" style="width: 7% !important; "><strong class="text-dark d-none d-md-inline-block">@i</strong></div>
+                }
+                else{
+                    <div class="ms-1" style="width: 7% !important; "><strong class="d-none d-md-inline-block">@i</strong></div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+    
+    
+        

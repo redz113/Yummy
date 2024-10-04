@@ -1,0 +1,70 @@
+@model List<DataThongKe> 
+
+@{
+    DateTime now = DateTime.Now;
+    int max = ViewBag.MaxPriceInDay;
+    int month = ViewBag.CurrentMonth;
+}
+
+
+<div class="" style="width: 60px;">
+    <div class="pt-4 d-flex flex-column float-end justify-content-between border-end border-3 border-dark text-secondary text-end" style="height: calc(400px - 1.5rem);">
+        @for(int i = 3; i > 0; i--){
+            int val = max/3*i;
+            <div class="pe-2"><strong>@(val)k</strong></div>
+        }
+            <div class="pe-2"><strong></strong></div>
+    </div>
+</div>
+<div class="w-100 position-relative">
+    <span class="h5 p-2 bg-dark opacity-50 text-white position-absolute top-0 end-0">$@Model.Sum(m => m.Total).ToString("N2")</span>
+    <div class="pt-4 d-flex flex-column justify-content-between text-end bg-green" style="height: 400px;">
+        <div class="pt-4 d-flex align-items-end justify-content-start w-100 h-100 border-bottom border-3 border-dark text-white text-center pe-4" >
+            @for(int i = 1; i <= DateTime.DaysInMonth(now.Year, month); i++){
+                bool flag = true;
+                foreach(DataThongKe m in Model){
+                    if(m.Key == i){
+                        int h = Int32.Parse(Math.Round((m.Total/1000.0), 0).ToString()) * 100 / max;
+                        string bg = "";
+                        bg = h > 100 ? "bg-success" : h < 5 ? "bg-danger" : "bg-primary";
+                        if(h > 100) h = 100;
+                        if(h <= 0) h = 1;
+                        <div    onmouseover="return MouseOver(@i)" 
+                                onmouseout="return MouseOut(@i)" 
+                                class="ms-1 h-@(h) @bg  position-relative opacity-75" 
+                                style="width: 3% !important;">
+                            <span id="@i" class="float-end d-none p-2 btn btn-secondary position-absolute top-0 start-0 translate-middle text-start z-1">
+                                <strong class="d-block d-md-none">@((new DateOnly(now.Year, month, i)).ToString("dd/MM/yy"))</strong>
+                                <strong>$@m.Total.ToString("N2")</strong>
+                            </span>
+                        </div>
+                        flag = false;
+                        break;
+                    }
+                
+                }
+                if(flag){
+                    <div class="ms-1 h-0 bg-danger" style="width: 3% !important; "></div>
+                    flag = true;
+                }
+            }
+        </div>
+        <div class="d-flex align-items-end justify-content-start w-100 text-center text-secondary bg-light pe-4 pt-4" style="height: 1rem;">
+            @for(int i = 1; i <= DateTime.DaysInMonth(now.Year, ViewBag.CurrentMonth); i++){
+                if(now.Day == i){
+                    <div class="ms-1  text-dark" style="width: 3% !important; "><strong class="text-dark d-none d-md-inline-block">@i</strong></div>
+                }
+                else{
+                    <div class="ms-1" style="width: 3% !important; "><strong class="d-none d-md-inline-block">@i</strong></div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+

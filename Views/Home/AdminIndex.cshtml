@@ -1,25 +1,16 @@
+
+@using App.Data
+@using AppFoods.Data;
+@using System.Security.Claims
 @{
     ViewData["Title"] = "Trang quản trị";
 }
 
 
-@* <div class="row d-position">
-  <div class="col-2">
-    <button class="btn btn-light p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i class="fa-solid fa-bars"></i></button>
-
-    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Colored with scrolling</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body">
-        <p>Try scrolling the rest of the page to see this option in action.</p>
-      </div>
-    </div>
-  </div>
-</div> *@
-
 <div class="row">
+
+@if(User.HasClaim("TableManager", ClaimName.TableManager) || User.IsInRole(RoleName.Administrator)){
+  
   <div class="col-sm-6 col-md-4 mb-3">
     <a asp-area="Admin" asp-controller="Table" asp-action="Index" class="text-dark">
       <div class="card border-3">
@@ -31,7 +22,9 @@
       </div>
     </a>
   </div>
+}
 
+@if(User.HasClaim("OrderManager", ClaimName.OrderManager) || User.IsInRole(RoleName.Administrator)){
   <div class="col-sm-6 col-md-4 mb-3">
     <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="text-dark">
       <div class="card border-3">
@@ -43,32 +36,23 @@
       </div>
     </a>
   </div>
+}
 
+@if(User.HasClaim("MenuManager", ClaimName.MenuManager) || User.IsInRole(RoleName.Administrator)){
   <div class="col-sm-6 col-md-4 mb-3">
-    <a asp-area="Admin" asp-controller="Restaurant" asp-action="Index" class="text-dark">
+      <a asp-area="Admin" asp-controller="Menu" asp-action="Index" class="text-dark">
       <div class="card border-3">
-        <img src="~/img/layout/restaurant.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
+        <img src="~/img/layout/menu.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
         <div class="card-body">
-          <h5 class="card-title">Chuỗi cơ sở</h5>
+          <h5 class="card-title">Danh sách món ăn</h5>
           <p class="card-text">Quản lý danh sách các món ăn của nhà hàng.</p>
         </div>
       </div>
     </a>
   </div>
-
+}
+@if(User.HasClaim("MenuManager", ClaimName.MenuManager) || User.IsInRole(RoleName.Administrator)){
   <div class="col-sm-6 col-md-4 mb-3">
-    <a asp-area="Admin" asp-controller="Menu" asp-action="Index" class="text-dark">
-    <div class="card border-3">
-      <img src="~/img/layout/menu.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
-      <div class="card-body">
-        <h5 class="card-title">Danh sách món ăn</h5>
-        <p class="card-text">Quản lý danh sách các món ăn của nhà hàng.</p>
-      </div>
-    </div>
-  </a>
-  </div>
-
-    <div class="col-sm-6 col-md-4 mb-3">
         <a asp-area="Admin" asp-controller="Combo" asp-action="Index" class="text-dark">
             <div class="card border-3">
                 <img src="~/img/layout/combo.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
@@ -79,7 +63,8 @@
             </div>
         </a>
     </div>
-
+}
+@if(User.HasClaim("ChefManager", ClaimName.ChefManager) || User.IsInRole(RoleName.Administrator)){
   <div class="col-sm-6 col-md-4 mb-3">
     <a asp-area="Admin" asp-controller="Chef" asp-action="Index" class="text-dark">
     <div class="card border-3">
@@ -91,11 +76,25 @@
     </div>
   </a>
   </div>
-
+}
+@if(User.HasClaim("RestaurantManager", ClaimName.RestaurantManager) || User.IsInRole(RoleName.Administrator)){
+  <div class="col-sm-6 col-md-4 mb-3">
+    <a asp-area="Admin" asp-controller="Restaurant" asp-action="Index" class="text-dark">
+      <div class="card border-3">
+        <img src="~/img/layout/restaurant.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
+        <div class="card-body">
+          <h5 class="card-title">Chuỗi cơ sở</h5>
+          <p class="card-text">Quản lý danh sách các món ăn của nhà hàng.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+}
+@if(User.HasClaim("GroupManager", ClaimName.GroupManager) || User.IsInRole(RoleName.Administrator)){
   <div class="col-sm-6 col-md-4 mb-3">
     <a asp-area="Admin" asp-controller="Group" asp-action="Index" class="text-dark">
     <div class="card border-3">
-      <img src="~/img/layout/admin.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
+      <img src="~/img/layout/group.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
       <div class="card-body">
         <h5 class="card-title">Danh sách nhóm</h5>
         <p class="card-text">Quản lý danh sách các món ăn của nhà hàng.</p>
@@ -103,7 +102,23 @@
     </div>
   </a>
   </div>
+}
 
+@if(User.IsInRole(RoleName.Manager) || User.IsInRole(RoleName.Administrator)){
+  <div class="col-sm-6 col-md-4 mb-3">
+    <a asp-area="Admin" asp-controller="ThongKe" asp-action="Index" class="text-dark">
+    <div class="card border-3">
+      <img src="~/img/layout/summary.jpg" class="card-img-top img-fluid" alt="..." style="height: 120px">
+      <div class="card-body">
+        <h5 class="card-title">Thống kê</h5>
+        <p class="card-text">Quản lý danh sách các món ăn của nhà hàng.</p>
+      </div>
+    </div>
+  </a>
+  </div>
+}
+
+@if(User.HasClaim("RoleManager", ClaimName.RoleManager) || User.IsInRole(RoleName.Administrator)){
   <div class="col-sm-6 col-md-4 mb-3">
     <a asp-area="Identity" asp-controller="Role" asp-action="Index" class="text-dark">
     <div class="card border-3">
@@ -115,7 +130,8 @@
     </div>
   </a>
   </div>
-
+}
+@if(User.HasClaim("UserManager", ClaimName.UserManager) || User.IsInRole(RoleName.Administrator)){
   <div class="col-sm-6 col-md-4 mb-3">
     <a asp-area="Identity" asp-controller="User" asp-action="Index" class="text-dark">
     <div class="card border-3">
@@ -127,6 +143,7 @@
     </div>
   </a>
   </div>
+}
 </div>
 
 

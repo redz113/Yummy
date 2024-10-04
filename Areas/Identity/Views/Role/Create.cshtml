@@ -26,9 +26,17 @@
             </div>
                 
             <div class="mb-3 form-group">
-                <label asp-for="Claims" class="form-label"></label><br />
+                <label class="form-label">Quyền truy cập</label><br />
                 
-                @Html.ListBoxFor(m => m.Claims, (IEnumerable <SelectListItem>) claims, new { @class = "p-2", size = "10" })
+                @* @Html.ListBoxFor(m => m.Claims, (IEnumerable <SelectListItem>) claims, new { @class = "p-2", size = "10" }) *@
+                <div class="row">
+                    @foreach(var l in claims.Keys ){
+                        <div class="col-md-6 mb-2 form-check">
+                            <input type="checkbox" name="claim-@claims[l]" id="claim-@claims[l]" /> 
+                            <label for="claim-@claims[l]">@l</label>
+                        </div>
+                    }
+                </div>
             </div>
                  <div class="mb-3 form-group">
                 <input type="submit" value="Tạo mới" class="btn btn-primary" />

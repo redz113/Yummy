@@ -2,6 +2,7 @@
  
 @{
     ViewData["Title"] = "Cập nhật role";
+    var claims = ViewBag.Claims;
 }
 <div class="mb-4 d-flex align-items-center">
     <a asp-controller="Home" asp-action="AdminIndex" class="text-dark"><i class="fa-solid fa-house px-2"></i>Trang chủ</a>
@@ -24,9 +25,18 @@
             </div>
 
             <div class="mb-3 form-group">
-                <label asp-for="Claims" class="form-label"></label><br />
+                <label class="form-label">Quyền truy cập</label><br />
 
-                @Html.ListBoxFor(m => m.Claims, (IEnumerable<SelectListItem>) ViewBag.Claims, new { @class = "p-2", size = "10" })
+                @* @Html.ListBoxFor(m => m.Claims, (IEnumerable<SelectListItem>) ViewBag.Claims, new { @class = "p-2", size = "10" }) *@
+                <div class="row">
+                    @foreach(string l in claims.Keys ){
+                        bool flag = Model.Claims.Contains(claims[l]); 
+                        <div class="col-md-6 mb-2 form-check">
+                            <input type="checkbox" name="claim-@claims[l]" id="claim-@claims[l]" checked="@flag" /> 
+                            <label for="claim-@claims[l]">@l</label>
+                        </div>
+                    }
+                </div>
             </div>
 
             <div class="mb-3 form-group">

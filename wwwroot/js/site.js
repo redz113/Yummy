@@ -20,3 +20,14 @@ function displaySelectedImage(event, elementId, btnShow = '') {
         reader.readAsDataURL(fileInput.files[0]);
     }
 }
+
+
+function MouseOver(id){
+    $('#' + id).removeClass('d-none');
+}
+
+function MouseOut(id){
+    $('#' + id).addClass('d-none');
+}
+
+

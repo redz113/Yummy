@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using AppFoods.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Org.BouncyCastle.Crypto.Engines;
+using NuGet.Protocol;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -76,7 +77,7 @@ namespace App.Areas.Identity.Controllers
         public IActionResult Create()
         {
             //ViewBag.Claims = new SelectList(ClaimName.ListClaims());
-            ViewBag.Claims = new SelectList(ClaimName.DirClaims().Keys);
+            ViewBag.Claims = ClaimName.DirClaims();
             return View();
         }
         
@@ -85,16 +86,17 @@ namespace App.Areas.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(CreateRoleModel model)
         {
-            var dir = ClaimName.DirClaims();
-            ViewBag.Claims = new SelectList(dir.Keys);
+            // return Content(dir.ToJson() );
             if  (!ModelState.IsValid)
             {
+                ViewBag.Claims = ClaimName.DirClaims();
                 return View();
             }
 
             var role = await _roleManager.FindByNameAsync(model.Name);
             if(role != null)
             {
+                ViewBag.Claims = ClaimName.DirClaims();
                 TempData["Error"] = "Role đã tồn tại";
                 return View(model);
             }
@@ -102,11 +104,15 @@ namespace App.Areas.Identity.Controllers
             var result = await _roleManager.CreateAsync(newRole);
             if (result.Succeeded)
             {
-                foreach(var claim in model.Claims)
+                var dir = ClaimName.DirClaims();
+                
+                var selectClaims = Request.Form.Keys.Where(n => n.StartsWith("claim-")).Select(k => k.Substring(6)).ToList();
+                foreach(var claim in selectClaims)
                 {
-                    await _roleManager.AddClaimAsync(newRole, new Claim(dir[claim], claim));
+                    string claimValue = dir.Where(d => d.Value == claim).Select(d => d.Key).FirstOrDefault();
+                    await _roleManager.AddClaimAsync(newRole, new Claim(claim, claimValue));
                 }
-                TempData["Success"] = $"Bạn vừa tạo role mới: {model.Name}";
+                TempData["Success"] = $"Đã thêm 1 role mới";
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -142,7 +148,7 @@ namespace App.Areas.Identity.Controllers
 
             if (result.Succeeded)
             {
-                StatusMessage = $"Bạn vừa xóa: {role.Name}";
+                TempData["success"] = "Đã xóa role";
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -154,20 +160,22 @@ namespace App.Areas.Identity.Controllers
 
         // GET: /Role/Edit/roleid
         [HttpGet("{roleid}")]
-        public async Task<IActionResult> EditAsync(string roleid, [Bind("Name")]EditRoleModel model)
+        public async Task<IActionResult> EditAsync(string roleid)
         {
-            ViewBag.Claims = new SelectList(ClaimName.DirClaims().Keys);
-            if (roleid == null) return NotFound("Không tìm thấy role");
+            ViewBag.Claims = ClaimName.DirClaims();
+            // if (roleid == null) return NotFound("Không tìm thấy role");
             var role = await _roleManager.FindByIdAsync(roleid);
             if (role == null)
             {
                 return NotFound("Không tìm thấy role");
             } 
+
+            EditRoleModel model = new EditRoleModel();
             model.Name = role.Name;
             model.Claims = await _context.RoleClaims
                             .Where(rc => rc.RoleId == role.Id)
                             .Select(rc => rc.ClaimType)
-                            .ToArrayAsync();
+                            .ToListAsync();
 
             model.role = role;
             ModelState.Clear();
@@ -178,10 +186,9 @@ namespace App.Areas.Identity.Controllers
         // POST: /Role/Edit/1
         [HttpPost("{roleid}"), ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditConfirmAsync(string roleid, [Bind("Name","Claims")]EditRoleModel model)
+        public async Task<IActionResult> EditConfirmAsync(string roleid, [Bind("Name")]EditRoleModel model)
         {
             var dir = ClaimName.DirClaims();
-            ViewBag.Claims = new SelectList(dir.Keys);
 
             if (roleid == null) return NotFound("Không tìm thấy role");
             var role = await _roleManager.FindByIdAsync(roleid);
@@ -193,6 +200,7 @@ namespace App.Areas.Identity.Controllers
             var check = await _context.Roles.FirstOrDefaultAsync(r => r.Name == model.Name && r.Id != roleid);
             if(check != null)
             {
+                ViewBag.Claims = dir;
                 TempData["Error"] = "Role đã tồn tại";
                 return View(model);
             }
@@ -204,13 +212,14 @@ namespace App.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 await _context.RoleClaims.Where(rc => rc.RoleId == roleid).ExecuteDeleteAsync();
-
-                foreach (var claim in model.Claims)
+                var selectClaims = Request.Form.Keys.Where(k => k.Contains("claim-")).Select(k => k.Substring(6)).ToList();
+                foreach (var claim in selectClaims)
                 {
-                    await _roleManager.AddClaimAsync(role, new Claim(dir[claim], claim));
+                    string clainValue = dir.Where(d => d.Value == claim).Select(d => d.Key).FirstOrDefault();
+                    await _roleManager.AddClaimAsync(role, new Claim(claim, clainValue));
                 }
 
-                TempData["Success"] = $"Bạn đã cập nhật role: {model.Name}";
+                TempData["Success"] = $"Đã cập nhật role";
                 return RedirectToAction(nameof(Index));
             }
             else

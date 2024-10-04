@@ -67,20 +67,25 @@ namespace App.Areas.Identity.Controllers
             if (ModelState.IsValid)
             {
                  
-                var result = await _signInManager.PasswordSignInAsync(model.UserNameOrEmail, model.Password, model.RememberMe, lockoutOnFailure: true);                
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);                
                 // Tìm UserName theo Email, đăng nhập lại
-                if ((!result.Succeeded) && AppUtilities.IsValidEmail(model.UserNameOrEmail))
+                if (!result.Succeeded)
                 {
-                    var user = await _userManager.FindByEmailAsync(model.UserNameOrEmail);
-                    if (user != null)
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    if (user == null)
                     {
-                        result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
+                        // ModelState.AddModelError("Email đăng nhập hoặc mật khẩu không chính xác");
+                        TempData["Error"] = "Tên đăng nhập hoặc mật khẩu không chính xác.";
+                        return View(model);
                     }
+
+                    result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
                 } 
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
+                    TempData["Success"] = "Đăng nhập thành công";
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -91,11 +96,13 @@ namespace App.Areas.Identity.Controllers
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning(2, "Tài khoản bị khóa");
+
                     return View("Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError("Không đăng nhập được.");
+                    // ModelState.AddModelError("Không đăng nhập được.");
+                    TempData["Error"] = "Tên đăng nhập hoặc mật khẩu không chính xác.";
                     return View(model);
                 }
             }

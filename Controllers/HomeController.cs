@@ -37,7 +37,7 @@ namespace AppFoods.Controllers
             return View();
         }
 
-        [Authorize(Roles = $"{RoleName.Administrator},{RoleName.Manager}")]
+        [Authorize(Roles = $"{RoleName.Administrator},{RoleName.Manager},{RoleName.Chef}")]
         public IActionResult AdminIndex()
         {
             return View();

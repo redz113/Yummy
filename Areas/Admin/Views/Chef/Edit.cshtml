@@ -19,7 +19,7 @@
             <pre class="h4 mb-3 text-success"><strong>Thông tin đầu bếp</strong></pre>
             <div class="d-block d-md-flex">
                 <div class="mb-3">
-                    <img src="@userInfo.AvatarImg" class="square-2 img-fluid" alt="NULL">
+                    <img src="@userInfo.AvatarImg" class="square-2 img-fluid">
                 </div>
                 <div class="ps-3 h5 align-content-end m-0">
                     <p><strong>Họ tên:</strong> @userInfo.Name</p>
@@ -27,7 +27,7 @@
                     <p><strong>Ngày sinh:</strong> @userInfo.DateOfBirth?.ToString("dd/MM/yyyy")</p>
                     <p><strong>Giới tính:</strong> 
                         @{
-                            int gender = userInfo.Gender;
+                            int? gender = userInfo.Gender;
                             switch(gender){
                                 case 0: <span>Nữ</span> break;
                                 case 1: <span>Nam</span> break;

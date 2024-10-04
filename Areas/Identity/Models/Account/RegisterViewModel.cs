@@ -36,10 +36,10 @@ namespace App.Areas.Identity.Models.AccountViewModels
         [Required(ErrorMessage = "Phải nhập {0}")]
         [StringLength(100, ErrorMessage = "{0} phải dài từ {2} đến {1} ký tự.", MinimumLength = 3)]
         [CustomUserNameValidation]
-        public string UserName { get; set; }
+        public string UserName { get; set; } = Guid.NewGuid().ToString();
 
         [DataType(DataType.Text)]
-        [Display(Name = "Tên")]
+        [Display(Name = "Họ tên")]
         [Required(ErrorMessage = "Phải nhập {0}")]
         [StringLength(100, ErrorMessage = "{0} phải dài từ {2} đến {1} ký tự.", MinimumLength = 2)]
         public string Name { get; set; }
